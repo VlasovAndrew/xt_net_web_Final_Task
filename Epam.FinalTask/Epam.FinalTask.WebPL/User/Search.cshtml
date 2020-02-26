@@ -1,0 +1,28 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Entities;
+@using Epam.FinalTask.Ioc;
+@{
+    Layout = "~/Layouts/_Layout.cshtml";
+
+    IUserBL userBL = DependencyResolver.UserBL;
+
+    IEnumerable<UserDTO> users = userBL.GetAll();
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <input class="form-control" type="text" placeholder="Search" aria-label="Search">            
+            @foreach (var user in users)
+            {
+                <div>
+                    <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" />
+                    @user.Name @user.Surname
+                </div>
+            }
+        </div>
+    </div>    
+</div>
+
+
+

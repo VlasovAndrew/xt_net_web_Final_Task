@@ -1,0 +1,93 @@
+﻿@using Epam.FinalTask.WebPL.Helpers;
+@{
+    Layout = "~/Layouts/_Layout.cshtml";
+    string errorMessage = null;
+}
+
+@if (IsPost)
+{
+    string name = Request.Form["name"];
+    string surname = Request.Form["surname"];
+    string birthday = Request.Form["birthday"];
+    string city = Request.Form["city"];
+    string street = Request.Form["street"];
+    string house = Request.Form["house"];
+    string apartment = Request.Form["apartment"];
+
+    errorMessage = UserRequests.AddUser(name, surname, birthday, city, street, house, apartment, null);
+    if (errorMessage == null)
+    {
+        Response.Redirect("~/user/search");
+    }
+}
+else
+{
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-4">
+                <!-- Form -->
+                <form method="post">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputName">Имя</label>
+                            <input type="text" class="form-control" name="name" 
+                                   id="inputName" placeholder="Имя">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputSurname">Фамилия</label>
+                            <input type="text" class="form-control" name="surname" 
+                                   id="inputSurname" placeholder="Фамилия">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-7">
+                            <label for="inputBirthday">Дата рождения</label>
+                            <input type="date" class="form-control" 
+                                   id="inputBirthday" placeholder="Фамилия"
+                                   name="birthday">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="inputAddress">Город</label>
+                            <input type="text" class="form-control" 
+                                   id="inputCity" placeholder="Город"
+                                   name="city">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="inputAddress">Улица</label>
+                            <input type="text" class="form-control" 
+                                   id="inputStreet" 
+                                   placeholder="Улица"
+                                   name="street">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputHouseNumber">Дом</label>
+                            <input type="number" class="form-control" 
+                                   id="inputHouse" 
+                                   placeholder="Дом"
+                                   name="house">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputApartmentNumber">Квартира</label>
+                            <input type="number" class="form-control" 
+                                   id="inputApartmentNumber" 
+                                   placeholder="Квартира"
+                                   name="apartment">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"> Создать </button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
