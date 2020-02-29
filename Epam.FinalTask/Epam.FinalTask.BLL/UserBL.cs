@@ -32,7 +32,17 @@ namespace Epam.FinalTask.BLL
                 HouseNumber = userDTO.HouseNumber,
                 ApartmentNumber = userDTO.ApartmentNumber,
             };
-            /// Save image 
+
+            if (userDTO.Avatar != null)
+            {
+                string fileName = Guid.NewGuid().ToString();
+                string hostingPath = HostingEnvironment.MapPath("~");
+                string imagePath = Path.Combine("Images", fileName);
+                string fullPath = Path.Combine(hostingPath, imagePath);
+                File.WriteAllBytes(fullPath, userDTO.Avatar);
+                user.ImagePath = imagePath;
+            }
+
             user = _userDao.Add(user);
             userDTO.ID = user.ID;
             return userDTO;
@@ -63,18 +73,13 @@ namespace Epam.FinalTask.BLL
                 friends.Add(_userDao.GetById(friendId));
             }
             /// Check image path
-            string avatarPath;
-            string hostingPath = HostingEnvironment.MapPath("~");
             if (user.ImagePath == null)
             {
-                avatarPath = Path.Combine(hostingPath, ConfigurationManager.AppSettings["defaultUserImage"]);
+                user.ImagePath = ConfigurationManager.AppSettings["defaultUserImage"];
             }
-            else 
-            {
-                avatarPath = Path.Combine(hostingPath, user.ImagePath);
-            }
-            byte[] avatar = File.ReadAllBytes(avatarPath);
-            return new UserDTO()
+            string hostingPath = HostingEnvironment.MapPath("~");
+            byte[] avatar = File.ReadAllBytes(Path.Combine(hostingPath, user.ImagePath));
+            UserDTO userDTO = new UserDTO()
             {
                 Name = user.Name,
                 Surname = user.Surname,
@@ -83,9 +88,10 @@ namespace Epam.FinalTask.BLL
                 Street = user.Street,
                 HouseNumber = user.HouseNumber,
                 ApartmentNumber = user.ApartmentNumber,
+                Friends = user.Friends,
                 Avatar = avatar,
-                Friends = friends,
             };
+            return userDTO;
         }
     }
 }

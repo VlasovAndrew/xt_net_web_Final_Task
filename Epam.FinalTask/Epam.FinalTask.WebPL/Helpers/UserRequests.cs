@@ -50,9 +50,6 @@ namespace Epam.FinalTask.WebPL.Helpers
                 return "Введите номер дома";
             }
 
-            if (!int.TryParse(houseParam, out var house) || house <= 0) {
-                return "Введите корректный номер дома";
-            }
             UserDTO userDTO = new UserDTO();
 
             userDTO.Name = nameParam;
@@ -60,7 +57,7 @@ namespace Epam.FinalTask.WebPL.Helpers
             userDTO.City = cityParam;
             userDTO.Birthday = birthday;
             userDTO.Street = streetParam;
-            userDTO.HouseNumber = house;
+            userDTO.HouseNumber = houseParam;
             userDTO.Avatar = avatar;
 
             if (apartmentParam != null)

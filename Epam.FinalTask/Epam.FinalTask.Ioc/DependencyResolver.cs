@@ -16,7 +16,7 @@ namespace Epam.FinalTask.Ioc
         public static IUserBL UserBL { get; }
         static DependencyResolver()
         {
-            UserDao = new RAMUserDao();
+            UserDao = new SQLUserDao();
             UserBL = new UserBL(UserDao);
         }
     }

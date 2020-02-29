@@ -10,10 +10,6 @@ namespace Epam.FinalTask.Entities
 {
     public class UserDTO : AbstractUser
     {
-        public UserDTO() {
-            Friends = new List<User>();
-        }
         public byte[] Avatar { get; set; }
-        public IEnumerable<User> Friends { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿@using Epam.FinalTask.WebPL.Helpers;
 @{
-    Layout = "~/Layouts/_Layout.cshtml";
+    Layout = null;
     string errorMessage = null;
 }
 
@@ -13,81 +13,126 @@
     string street = Request.Form["street"];
     string house = Request.Form["house"];
     string apartment = Request.Form["apartment"];
+    byte[] photo =  WebImage.GetImageFromRequest()?.GetBytes();
 
-    errorMessage = UserRequests.AddUser(name, surname, birthday, city, street, house, apartment, null);
+    errorMessage = UserRequests.AddUser(name, surname, birthday, city, street, house, apartment, photo);
     if (errorMessage == null)
     {
         Response.Redirect("~/user/search");
     }
 }
-else
-{
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <link href="~/Style/Style.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <title>Final Task </title>
+</head>
+<body>
     <div class="container">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-5 col-sm-8">
                 <!-- Form -->
-                <form method="post">
+                <form method="post" novalidate enctype="multipart/form-data">
+                    <p class="h4 mb-4 mt-4 text-center">Создать аккаунт</p>
+
+                    <div class="text-center mb-2">
+                        <img class="img-thumbnail hidden-image" id="user-image" alt="Фото" />
+                    </div>
+
+                    <div class="form-row">
+                        <label class="btn btn-primary">
+                            Выберите фото <input type="file" name="Image" id="user-image-input" hidden />
+                        </label>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputName">Имя</label>
-                            <input type="text" class="form-control" name="name" 
-                                   id="inputName" placeholder="Имя">
+                            <input type="text" class="form-control" name="name"
+                                   id="inputName" placeholder="Имя" required />
+                            <div class="invalid-feedback">
+                                Пожалуйста введите имя.
+                            </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputSurname">Фамилия</label>
-                            <input type="text" class="form-control" name="surname" 
-                                   id="inputSurname" placeholder="Фамилия">
+                            <input type="text" class="form-control" name="surname"
+                                   id="inputSurname" placeholder="Фамилия" required />
+                            <div class="invalid-feedback">
+                                Пожалуйста введите фамилию.
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
-                        <div class="form-group col-md-7">
+                        <div class="form-group col-md-12">
                             <label for="inputBirthday">Дата рождения</label>
-                            <input type="date" class="form-control" 
-                                   id="inputBirthday" placeholder="Фамилия"
-                                   name="birthday">
+                            <input type="date" class="form-control"
+                                   id="inputBirthday"
+                                   name="birthday" required />
+                            <div class="invalid-feedback">
+                                Пожалуйста введите дату рождения.
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-12">
                             <label for="inputAddress">Город</label>
-                            <input type="text" class="form-control" 
+                            <input type="text" class="form-control"
                                    id="inputCity" placeholder="Город"
-                                   name="city">
+                                   name="city" required />
+                            <div class="invalid-feedback">
+                                Пожалуйста введите Ваш город.
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-12">
                             <label for="inputAddress">Улица</label>
-                            <input type="text" class="form-control" 
-                                   id="inputStreet" 
+                            <input type="text" class="form-control"
+                                   id="inputStreet"
                                    placeholder="Улица"
-                                   name="street">
+                                   name="street" required />
+                            <div class="invalid-feedback">
+                                Пожалуйста введите Вашу улицу.
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputHouseNumber">Дом</label>
-                            <input type="number" class="form-control" 
-                                   id="inputHouse" 
+                            <input type="number" class="form-control"
+                                   id="inputHouse"
                                    placeholder="Дом"
-                                   name="house">
+                                   name="house" required />
+                            <div class="invalid-feedback">
+                                Пожалуйста введите номер Вашего дома.
+                            </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputApartmentNumber">Квартира</label>
-                            <input type="number" class="form-control" 
-                                   id="inputApartmentNumber" 
+                            <input type="text" class="form-control"
+                                   id="inputApartmentNumber"
                                    placeholder="Квартира"
-                                   name="apartment">
+                                   name="apartment" />
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary"> Создать </button>
+                    <button type="submit" class="btn btn-primary mb-4"> Создать </button>
                 </form>
             </div>
         </div>
     </div>
-}
+
+    <script src="~/Scripts/ProjectScripts/CreateUserValidation.js"></script>
+    <script src="~/Scripts/ProjectScripts/AttachImage.js"></script>
+</body>
+</html>
+
