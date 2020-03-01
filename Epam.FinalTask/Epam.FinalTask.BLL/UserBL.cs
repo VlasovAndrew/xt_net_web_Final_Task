@@ -81,6 +81,7 @@ namespace Epam.FinalTask.BLL
             byte[] avatar = File.ReadAllBytes(Path.Combine(hostingPath, user.ImagePath));
             UserDTO userDTO = new UserDTO()
             {
+                ID = user.ID,
                 Name = user.Name,
                 Surname = user.Surname,
                 Birthday = user.Birthday,

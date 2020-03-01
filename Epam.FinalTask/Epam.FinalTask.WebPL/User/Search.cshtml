@@ -9,56 +9,66 @@
     IEnumerable<UserDTO> users = userBL.GetAll();
 }
 
-    <div class="row">
-        <div class="col-lg-8">
-            <input class="form-control" type="text" placeholder="Введите имя и фамилию" aria-label="Search">
-
-            @foreach (var user in users)
-            {
+<section class="col-md-8 col-lg-7 mt-2 bg-white rounded">
+    <input class="form-control col-lg-10 mx-auto my-2" type="text" placeholder="Введите имя и фамилию" aria-label="Search">
+    @foreach (var user in users)
+    {
+        <div class="row my-3 user-row">
+            <input type="hidden" value="@user.ID"/>
+            <div class="col-lg-3 text-center">
+                <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" class="img-thumbnail small-img" />
+            </div>
+            <div class="col-lg-6 p-0">
+                <h4> @user.Name @user.Surname </h4>
+                <div> @user.City </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="mb-2">
+                    <button class="btn btn-primary w-100"> Добавить в друзья </button>
+                </div>
                 <div>
-                    <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" class="img-thumbnail"/>
-                    <h3>@user.Name @user.Surname @user.HouseNumber</h3>
+                    <button class="btn btn-primary w-100 message-btn"> Написать сообщение </button>
                 </div>
-            }
-
+            </div>
         </div>
+    }    
+</section>
 
-        <div class="col-lg-3">
-            <div class="form-row">
-                <div class="form-group col-12">
-                    <input type="text" class="form-control" placeholder="Город" />
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-12">
-                    <input type="text" class="form-control" placeholder="Улица" />
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-12">
-                    <input type="number" class="form-control" placeholder="Дом" />
-                </div>
-            </div>
-
-
-            <div class="form-row">
-                <label>Возраст </label>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-6">
-                    <input type="number" class="form-control" placeholder="От" />
-                </div>
-                <div class="form-group col-6">
-                    <input type="number" class="form-control" placeholder="До" />
-                </div>
-            </div>
-
-
-            <button type="submit" class="btn btn-primary"> Поиск</button>
+<div class="col-lg-2 bg-white my-2 rounded mx-2 h-25 p-3">
+    <div class="form-row">
+        <div class="form-group col-12">
+            <input type="text" class="form-control" placeholder="Город" />
         </div>
     </div>
-    
 
+    <div class="form-row">
+        <div class="form-group col-12">
+            <input type="text" class="form-control" placeholder="Улица" />
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-12">
+            <input type="number" class="form-control" placeholder="Дом" />
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <label class="px-1">Возраст </label>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-6">
+            <input type="number" class="form-control" placeholder="От" />
+        </div>
+        <div class="form-group col-6">
+            <input type="number" class="form-control" placeholder="До" />
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary"> Поиск</button>
+</div>
+
+<script src="~/Scripts/ProjectScripts/GoToChannel.js"></script>

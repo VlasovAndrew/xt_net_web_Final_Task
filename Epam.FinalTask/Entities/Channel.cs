@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities
+namespace Epam.FinalTask.Entities
 {
     public class Channel
     {
@@ -15,5 +15,6 @@ namespace Entities
         public int ID { get; set; }
         public string Title { get; set; }
         public ICollection<int> Messages { get; private set; }
+        public bool Directed { get; set; }
     }
 }

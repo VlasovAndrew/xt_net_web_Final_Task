@@ -1,0 +1,26 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@using Epam.FinalTask.Entities;
+
+@{
+    Layout = "~/Layouts/_Layout.cshtml";
+
+    int userID = 1;
+    IChannelBL channelBL = DependencyResolver.ChannelBL;
+    IEnumerable<Channel> channels = channelBL.GetUserChannels(userID);
+
+}
+
+    <section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
+        <div class="my-2">
+            <h1> Сообщения </h1>
+        </div>
+
+        @foreach (var channel in channels)
+        {
+            <div class="my-3">
+                <h3> @channel.Title </h3>
+                <div> Число сообщений: @channel.Messages.Count </div>
+            </div>
+        }
+    </section>

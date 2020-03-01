@@ -1,0 +1,14 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@using Epam.FinalTask.Entities;
+@{
+    Layout = null;
+
+    int fromUser = int.Parse(Request["fromUserID"]);
+    int toUser = int.Parse(Request["toUserID"]);
+
+    IChannelBL channelBL = DependencyResolver.ChannelBL;
+    Channel channel = channelBL.CreateDirectedChannel("Личные сообщения", fromUser, toUser);
+}
+
+

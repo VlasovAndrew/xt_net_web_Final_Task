@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using Epam.FinalTask.Entities;
 using Epam.FinalTask.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,7 @@ namespace Epam.FinalTask.DAL
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@channelID", SqlDbType.Int).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@channelTitle", SqlDbType.NVarChar).Value = channel.Title;
+                    command.Parameters.Add("@directed", SqlDbType.Bit).Value = channel.Directed;
                     connection.Open();
                     command.ExecuteNonQuery();
 
@@ -49,9 +50,10 @@ namespace Epam.FinalTask.DAL
                     var reader = command.ExecuteReader();
                     reader.Read();
                     channel.Title = (string)reader["Title"];
+                    channel.Directed = (bool)reader["Directed"];
                 }
             }
-            IEnumerable<int> messages = GetMessages(channelID);
+            IEnumerable<int> messages = GetMessagesFromChannel(channelID);
             foreach (var message in messages)
             {
                 channel.Messages.Add(message);
@@ -80,36 +82,26 @@ namespace Epam.FinalTask.DAL
             }
             return message;
         }
-        public void DeleteMessage(int ChannelID, int MessageID)
-        {
-            throw new NotImplementedException();
-        }
-
-        private IEnumerable<Message> GetMessages(int channelID) {
-            List<Message> messages = new List<Message>();
+        
+        private IEnumerable<int> GetMessagesFromChannel(int channelID) {
+            List<int> messages = new List<int>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                using (SqlCommand command = new SqlCommand("GetMessagesFromChannel", connection))
+                using (SqlCommand command = new SqlCommand("GetMessagesIDFromChannel", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@channelID", SqlDbType.Int).Value = channelID;
+
                     connection.Open();
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        messages.Add(new Message()
-                        {
-                            ID = (int)reader["ID"],
-                            UserID = (int)reader["FromUserID"],
-                            Text = (string)reader["MessageText"],
-                            SendingTime = (DateTime)reader["SendingTime"],
-                        });
+                        messages.Add((int)reader["ID"]);
                     }
                 }
             }
             return messages;
         }
-
         public IEnumerable<int> UserChannels(int userID)
         {
             List<int> channelIDs = new List<int>();
@@ -128,6 +120,20 @@ namespace Epam.FinalTask.DAL
                 }
             }
             return channelIDs;
+        }
+        public void AttachUserToChannel(int channelID, int userID)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("AttachUserToChannel", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    command.Parameters.Add("@channelID", SqlDbType.Int).Value = channelID;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

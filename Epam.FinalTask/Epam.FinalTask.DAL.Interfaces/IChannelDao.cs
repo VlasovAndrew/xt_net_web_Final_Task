@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using Epam.FinalTask.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Epam.FinalTask.DAL.Interfaces
         Channel Add(Channel channel);
         Message SendMessage(int ChannelID, Message message);
         Channel GetChannelById(int channelID);
-        void DeleteMessage(int channelID, int messageID);
+        void AttachUserToChannel(int channelID, int userID);
         IEnumerable<int> UserChannels(int userID);
     }
 }
