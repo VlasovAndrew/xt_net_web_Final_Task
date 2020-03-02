@@ -1,0 +1,22 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@using Epam.FinalTask.Entities;
+@using Newtonsoft.Json;
+@{
+    Layout = null;
+
+  int userID = int.Parse(Request["UserID"]);
+    int channelID = int.Parse(Request["ChannelID"]);
+    string text = Request["Text"];
+
+    IChannelBL channelBL = DependencyResolver.ChannelBL;
+    Message message = new Message()
+    {
+        UserID = userID,
+        Text = text,
+        ChannelID = channelID,
+        SendingTime = DateTime.Now,
+    };
+    message = channelBL.SendMessageToChannel(channelID, message);
+    Response.Write(JsonConvert.SerializeObject(message));
+}

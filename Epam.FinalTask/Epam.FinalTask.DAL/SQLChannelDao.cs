@@ -53,6 +53,7 @@ namespace Epam.FinalTask.DAL
                     channel.Directed = (bool)reader["Directed"];
                 }
             }
+            channel.ID = channelID;
             IEnumerable<int> messages = GetMessagesFromChannel(channelID);
             foreach (var message in messages)
             {
@@ -81,26 +82,6 @@ namespace Epam.FinalTask.DAL
                 }
             }
             return message;
-        }
-        
-        private IEnumerable<int> GetMessagesFromChannel(int channelID) {
-            List<int> messages = new List<int>();
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand command = new SqlCommand("GetMessagesIDFromChannel", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("@channelID", SqlDbType.Int).Value = channelID;
-
-                    connection.Open();
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        messages.Add((int)reader["ID"]);
-                    }
-                }
-            }
-            return messages;
         }
         public IEnumerable<int> UserChannels(int userID)
         {
@@ -134,6 +115,46 @@ namespace Epam.FinalTask.DAL
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        public IEnumerable<int> ChannelUsers(int channelID)
+        {
+            List<int> usersID = new List<int>();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("GetUsersFromChannel", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@channelID", SqlDbType.Int).Value = channelID;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        usersID.Add((int)reader["UserID"]);
+                    }
+                }
+            }
+            return usersID;
+        }
+        private IEnumerable<int> GetMessagesFromChannel(int channelID)
+        {
+            List<int> messages = new List<int>();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("GetMessagesIDFromChannel", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@channelID", SqlDbType.Int).Value = channelID;
+
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        messages.Add((int)reader["ID"]);
+                    }
+                }
+            }
+            return messages;
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Epam.FinalTask.DAL.Interfaces
         Channel GetChannelById(int channelID);
         void AttachUserToChannel(int channelID, int userID);
         IEnumerable<int> UserChannels(int userID);
+        IEnumerable<int> ChannelUsers(int channelID);
     }
 }

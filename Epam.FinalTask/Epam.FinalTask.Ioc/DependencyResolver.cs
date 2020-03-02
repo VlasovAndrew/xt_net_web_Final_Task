@@ -16,15 +16,19 @@ namespace Epam.FinalTask.Ioc
         public static IUserBL UserBL { get; }
         public static IMessageDao MessageDao { get; }
         public static IChannelDao ChannelDao { get; }
-        
+        public static IMessageBL MessageBL { get; }
+
         public static IChannelBL ChannelBL { get; }
         static DependencyResolver()
         {
             UserDao = new SQLUserDao();
             UserBL = new UserBL(UserDao);
+
             MessageDao = new SQLMessageDao();
+            MessageBL = new MessageBL(MessageDao);            
+            
             ChannelDao = new SQLChannelDao();
-            ChannelBL = new ChannelBL(ChannelDao, MessageDao);
+            ChannelBL = new ChannelBL(ChannelDao, MessageDao, UserBL);
         }
     }
 }

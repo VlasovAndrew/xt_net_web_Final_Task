@@ -1,0 +1,28 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@using Epam.FinalTask.Entities;
+@{
+    Layout = "~/Layouts/_Layout.cshtml";
+
+    int channelID = int.Parse(Request.QueryString["id"]);
+    Channel channel = DependencyResolver.ChannelBL.GetById(channelID);
+}
+
+<section id="message-wall" class="col-lg-7 bg-white mt-2 h-25 rounded">
+    <input type="hidden" value="@channel.ID" id="channel-id" />
+    <div>
+        Сообщения
+    </div>
+</section>
+
+<div class="col-lg-2 ml-2 bg-white mt-2 pt-2 rounded">
+    <div class="text-center">
+        <h5> Написать сообщение </h5>
+    </div>
+    <div>
+        <textarea class="w-100" rows="10" id="message-field"></textarea>
+        <button class="btn btn-primary my-2" id="send-btn"> Отправить </button>
+    </div>
+</div>
+<script src="~/Scripts/ProjectScripts/SendMessage.js"></script>
+<script src="~/Scripts/ProjectScripts/GetMessages.js"></script>

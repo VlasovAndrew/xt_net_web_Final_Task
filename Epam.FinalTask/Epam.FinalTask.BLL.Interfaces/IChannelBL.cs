@@ -9,8 +9,11 @@ namespace Epam.FinalTask.BLL.Interfaces
 {
     public interface IChannelBL
     {
-        Channel GetChannel(int channelID);
+        Channel GetById(int channelID);
         IEnumerable<Channel> GetUserChannels(int userID);
         Channel CreateDirectedChannel(string title, int fromUserID, int toUserID);
+        IEnumerable<Message> GetMessagesFromChannel(int channelID);
+        IEnumerable<UserDTO> GetChannelUsers(int channelID);
+        Message SendMessageToChannel(int channelD, Message message);
     }
 }

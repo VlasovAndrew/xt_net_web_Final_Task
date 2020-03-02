@@ -12,9 +12,12 @@ namespace Epam.FinalTask.DAL
 {
     public class SQLMessageDao : IMessageDao
     {
-        private string _connectionString = ConfigurationManager
-            .ConnectionStrings["SocialHouseNetwork"]
-            .ConnectionString;
+        private string _connectionString; 
+
+        public SQLMessageDao()
+        {
+            _connectionString = ConfigurationManager.ConnectionStrings["SocialHouseNetwork"].ConnectionString;
+        }
         public void Delete(int Id)
         {
             throw new NotImplementedException();
@@ -28,7 +31,7 @@ namespace Epam.FinalTask.DAL
         public Message GetById(int id)
         {
             Message message;
-            using (SqlConnection connection = new SqlConnection())
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 using (SqlCommand command = new SqlCommand("GetMessageByID", connection))
                 {

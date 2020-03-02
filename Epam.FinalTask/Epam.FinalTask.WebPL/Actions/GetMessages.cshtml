@@ -1,0 +1,42 @@
+﻿@using Epam.FinalTask.Entities;
+@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@using Newtonsoft.Json;
+
+@if (!IsPost)
+{
+    string queryStr = Request["ID"];
+    if (!queryStr.IsInt() || queryStr.IsEmpty())
+    {
+        Response.Redirect("~/error");
+    }
+
+    int channelID = int.Parse(queryStr);
+    IChannelBL channelBL = DependencyResolver.ChannelBL;
+    IMessageBL messageBL = DependencyResolver.MessageBL;
+
+    Channel channel = channelBL.GetById(channelID);
+    IEnumerable<Message> messages = channelBL.GetMessagesFromChannel(channel.ID);
+
+    IEnumerable<UserDTO> channelUsers = channelBL.GetChannelUsers(channel.ID);
+    Dictionary<int, UserDTO> fastAccessUsers = new Dictionary<int, UserDTO>();
+
+    foreach (var user in channelUsers)
+    {
+        fastAccessUsers.Add(user.ID, user);
+    }
+
+    var response = messages.Select(ms => new {
+        UserName = fastAccessUsers[ms.UserID].Name,
+        UserSurname = fastAccessUsers[ms.UserID].Surname,
+        UserImage = fastAccessUsers[ms.UserID].Avatar,
+        Text = ms.Text,
+        SendingTime = ms.SendingTime,
+    });
+
+    Response.Write(JsonConvert.SerializeObject(response));
+}
+else
+{
+    Response.Redirect("~/error");
+}

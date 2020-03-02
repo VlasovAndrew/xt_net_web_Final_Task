@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IChannelBL.cs" />
+    <Compile Include="IMessageBL.cs" />
     <Compile Include="IUserBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
