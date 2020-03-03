@@ -49,6 +49,7 @@ namespace Epam.FinalTask.BLL
                 Channel channel = _channelDao.Add(new Channel()
                 {
                     Title = title,
+                    Directed = true,
                 });
 
                 _channelDao.AttachUserToChannel(channel.ID, fromUserID);

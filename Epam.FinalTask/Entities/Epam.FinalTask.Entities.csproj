@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractUser.cs" />
+    <Compile Include="Account.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="User.cs" />

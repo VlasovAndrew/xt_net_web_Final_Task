@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAccountBL.cs" />
     <Compile Include="IChannelBL.cs" />
     <Compile Include="IMessageBL.cs" />
     <Compile Include="IUserBL.cs" />

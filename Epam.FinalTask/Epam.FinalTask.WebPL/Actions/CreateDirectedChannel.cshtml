@@ -9,6 +9,7 @@
 
     IChannelBL channelBL = DependencyResolver.ChannelBL;
     Channel channel = channelBL.CreateDirectedChannel("Личные сообщения", fromUser, toUser);
+    Response.Write(channel.ID);
 }
 
 

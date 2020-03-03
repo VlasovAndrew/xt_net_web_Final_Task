@@ -1,9 +1,12 @@
 ﻿let messageWall = document.getElementById('message-wall');
 let channelID = document.getElementById('channel-id').value;
 
+let lastMessageIndex = 0;
+
 let readMessages = (data) => {
     let response = JSON.parse(data);
-    for (let i = 0; i < response.length; i++) {
+    let responeseLength = response.length;
+    for (let i = lastMessageIndex; i < responeseLength; i++) {
         let messageRow = document.createElement('div');
         messageRow.classList.add("my-2");
         let userCaption = document.createElement('span');
@@ -17,8 +20,14 @@ let readMessages = (data) => {
 
         messageWall.appendChild(messageRow);
     }
+    if (responeseLength > lastMessageIndex) {
+        lastMessageIndex = responeseLength;
+    }
 }
 
-$.get('/actions/GetMessages?id=' + channelID, readMessages);
+let getMessages = () => {
+    $.get('/actions/GetMessages?id=' + channelID, readMessages);
+    console.log("hello");
+}
 
-
+setInterval(getMessages, 500);

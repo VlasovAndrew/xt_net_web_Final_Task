@@ -128,6 +128,8 @@
     <Content Include="Actions\SendMessage.cshtml" />
     <Content Include="Actions\GetMessages.cshtml" />
     <Content Include="Index.cshtml" />
+    <Content Include="Login.cshtml" />
+    <Content Include="Layouts\_SimpleLayout.cshtml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -139,10 +141,10 @@
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\ProjectScripts\AttachImage.js" />
     <Content Include="Scripts\ProjectScripts\CreateUserValidation.js" />
-    <Content Include="Scripts\ProjectScripts\GetMessages.js" />
+    <Content Include="Scripts\ProjectScripts\_GetMessages.js" />
     <Content Include="Scripts\ProjectScripts\GoToChannel.js" />
     <Content Include="Scripts\ProjectScripts\GoToMessages.js" />
-    <Content Include="Scripts\ProjectScripts\SendMessage.js" />
+    <Content Include="Scripts\ProjectScripts\_SendMessage.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
     <Content Include="Scripts\src\methods\destroy.js" />
@@ -210,7 +212,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Style\_Style.css" />
+    <Content Include="Style\Style.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
