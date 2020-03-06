@@ -4,71 +4,119 @@
 @{
     Layout = "~/Layouts/_Layout.cshtml";
 
-    IUserBL userBL = DependencyResolver.UserBL;
+    Dictionary<string, string> searchRequest = new Dictionary<string, string>();
+    
+    searchRequest["name"] = Request["name"];
+    searchRequest["surname"] = Request["surname"];
+    searchRequest["city"] = Request["city"];
+    searchRequest["street"] = Request["street"];
+    searchRequest["lowerAgeBound"] = Request["lowerAgeBound"];
+    searchRequest["upperAgeBound"] = Request["upperAgeBound"];
 
-    IEnumerable<UserDTO> users = userBL.GetAll();
+    IUserBL userBL = DependencyResolver.UserBL;
+    IEnumerable<UserDTO> users = userBL.Search(searchRequest);
+
+    int loggedUserID = DependencyResolver.AccountBL.GetUserIDByLogin(User.Identity.Name);
+    UserDTO loggedUser = DependencyResolver.UserBL.GetById(loggedUserID);
+
 }
 
-<section class="col-md-8 col-lg-7 mt-2 bg-white rounded">
-    <input class="form-control col-lg-10 mx-auto my-2" type="text" placeholder="Введите имя и фамилию" aria-label="Search">
+<section class="col-md-8 col-lg-7 mt-2 h-50 bg-white rounded">
+    @if (users.Count() == 0) { 
+        <div>
+            С такими параметрами не найдено пользователей.
+        </div>
+    }
+
     @foreach (var user in users)
     {
-        <div class="row my-3 user-row">
-            <input type="hidden" value="@user.ID"/>
-            <div class="col-lg-3 text-center">
-                <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" class="img-thumbnail small-img" />
-            </div>
-            <div class="col-lg-6 p-0">
-                <h4> @user.Name @user.Surname </h4>
-                <div> @user.City </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="mb-2">
-                    <button class="btn btn-primary w-100"> Добавить в друзья </button>
+        if (user.ID == loggedUserID) {
+            continue;
+        }
+
+            <div class="row my-3 user-row">
+                <input type="hidden" value="@user.ID" />
+                <div class="col-lg-3 text-center">
+                    <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" class="img-thumbnail small-img" />
                 </div>
-                <div>
-                    <button class="btn btn-primary w-100 message-btn"> Написать сообщение </button>
+                <div class="col-lg-6 p-0">
+                    <h4> @user.Name @user.Surname </h4>
+                    <div> @user.City </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="mb-2">
+                        @if (loggedUser.Friends.Contains(user.ID))
+                        {
+                            <button class="btn btn-primary w-100 friend-btn remove-friend"> Удалить из друзей </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary w-100 friend-btn add-friend"> Добавить в друзья </button>
+                        }
+                    </div>
+                    <div>
+                        <button class="btn btn-primary w-100 message-btn"> Написать сообщение </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    }    
+        
+    }
 </section>
 
 <div class="col-lg-2 bg-white my-2 rounded mx-2 h-25 p-3">
-    <div class="form-row">
-        <div class="form-group col-12">
-            <input type="text" class="form-control" placeholder="Город" />
+    <form method="get">
+        <div class="form-row">
+            <div class="form-group col-12">
+                <input type="text" id="user-surname-input" name="name" 
+                       value="@Request["name"]" class="form-control" placeholder="Имя" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-row">
-        <div class="form-group col-12">
-            <input type="text" class="form-control" placeholder="Улица" />
+        <div class="form-row">
+            <div class="form-group col-12">
+                <input type="text" id="user-surname-input" 
+                       value="@Request["surname"]"
+                       name="surname" class="form-control" placeholder="Фамилия" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-row">
-        <div class="form-group col-12">
-            <input type="number" class="form-control" placeholder="Дом" />
+        <div class="form-row">
+            <div class="form-group col-12">
+                <input type="text" id="city-input" 
+                       value="@Request["city"]"
+                       name="city" class="form-control" placeholder="Город" />
+            </div>
         </div>
-    </div>
 
-
-    <div class="form-row">
-        <label class="px-1">Возраст </label>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-6">
-            <input type="number" class="form-control" placeholder="От" />
+        <div class="form-row">
+            <div class="form-group col-12">
+                <input type="text" id="street-input" name="street" class="form-control" placeholder="Улица" />
+            </div>
         </div>
-        <div class="form-group col-6">
-            <input type="number" class="form-control" placeholder="До" />
+
+        <div class="form-row">
+            <div class="form-group col-12">
+                <input type="text" name="house" class="form-control" placeholder="Дом" />
+            </div>
         </div>
-    </div>
 
+        <div class="form-row">
+            <label class="px-1"> Возраст </label>
+        </div>
 
-    <button type="submit" class="btn btn-primary"> Поиск</button>
+        <div class="form-row">
+            <div class="form-group col-6">
+                <input type="number" name="lowerAgeBound" class="form-control" placeholder="От" />
+            </div>
+            <div class="form-group col-6">
+                <input type="number" name="upperAgeBound" class="form-control" placeholder="До" />
+            </div>
+        </div>
+
+        <button type="submit" id="search-btn" class="btn btn-primary"> Поиск</button>
+    </form>
+    
 </div>
 
-<script src="~/Scripts/ProjectScripts/GoToChannel.js"></script>
+<script src="~/Scripts/ProjectScripts/MessageFriendBtn.js"></script>
+<script src="~/Scripts/ProjectScripts/Seach.js"></script>

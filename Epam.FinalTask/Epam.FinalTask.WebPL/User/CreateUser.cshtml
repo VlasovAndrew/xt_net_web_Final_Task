@@ -1,4 +1,5 @@
-﻿@using Epam.FinalTask.WebPL.Helpers;
+﻿@using Epam.FinalTask.Entities;
+@using Epam.FinalTask.WebPL.Helpers;
 @{
     Layout = "~/Layouts/_SimpleLayout.cshtml";
     string errorMessage = null;
@@ -6,28 +7,64 @@
 
 @if (IsPost)
 {
-    string name = Request.Form["name"];
-    string surname = Request.Form["surname"];
-    string birthday = Request.Form["birthday"];
-    string city = Request.Form["city"];
-    string street = Request.Form["street"];
-    string house = Request.Form["house"];
-    string apartment = Request.Form["apartment"];
-    byte[] photo =  WebImage.GetImageFromRequest()?.GetBytes();
+    string login = Request.Form["login"];
+    string password = Request.Form["password"];
 
-    errorMessage = UserRequests.AddUser(name, surname, birthday, city, street, house, apartment, photo);
-    if (errorMessage == null)
-    {
-        Response.Redirect("~/user/search");
-    }
+    // check error string
+    Tuple<string, Account> account = UserRequests.CreateAccount(login, password);
+    Tuple<string, UserDTO> user = UserRequests.CreateUser(Request);
+
+    UserRequests.CreateAccountWithUser(account.Item2, user.Item2);
+
+    LoginRequests.SignIn(login, password);
+    Response.Redirect("~");
 }
 
-    <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-5 col-sm-8 mt-4 bg-white rounded">
-            <!-- Form -->
-            <form method="post" novalidate enctype="multipart/form-data">
-                <p class="h4 mb-4 mt-4 text-center">Создать аккаунт</p>
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-5 col-sm-8 mt-4 bg-white rounded">
+        <!-- Form -->
+        <form method="post" novalidate="" enctype="multipart/form-data" id="main-form">
+            <p class="h4 mb-4 mt-4 text-center">Создать аккаунт</p>
 
+            <div class="tab">
+                <div class="form-row">
+                    <div class="form-group col-12" id="login-row">
+                        <label for="inputLogin">Логин</label>
+                        <input type="text" class="form-control"
+                               id="inputLogin" placeholder="Логин"
+                               name="login"/>
+                        <div class="invalid-feedback">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12" id="password-row">
+                        <label for="inputPassword">Пароль</label>
+                        <input type="text" class="form-control"
+                               id="input-password" placeholder="Пароль"
+                               name="password" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12" id="configrm-password-row">
+                        <label for="inputPassword">Повторите пароль</label>
+                        <input type="text" class="form-control"
+                               id="inputPasswordConfirm" placeholder="Пароль"
+                               name="second-password" />
+                        <div class="invalid-feedback">
+                            Пожалуйста повторите Ваш пароль.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab">
                 <div class="text-center mb-2">
                     <img class="img-thumbnail hidden-image" id="user-image" alt="Фото" />
                 </div>
@@ -39,50 +76,50 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" id="name-input">
                         <label for="inputName">Имя</label>
                         <input type="text" class="form-control" name="name"
-                               id="inputName" placeholder="Имя" required />
+                               id="inputName" placeholder="Имя"  />
                         <div class="invalid-feedback">
-                            Пожалуйста введите имя.
+                            
                         </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" id="lastname-input">
                         <label for="inputSurname">Фамилия</label>
                         <input type="text" class="form-control" name="surname"
-                               id="inputSurname" placeholder="Фамилия" required />
+                               id="inputSurname" placeholder="Фамилия"  />
                         <div class="invalid-feedback">
-                            Пожалуйста введите фамилию.
+                            
                         </div>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-12" id="date-row">
                         <label for="inputBirthday">Дата рождения</label>
                         <input type="date" class="form-control"
                                id="inputBirthday"
-                               name="birthday" required />
+                               name="birthday"  />
                         <div class="invalid-feedback">
-                            Пожалуйста введите дату рождения.
+                            
                         </div>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-12">
+                    <div class="form-group col-12" id="city-row">
                         <label for="inputAddress">Город</label>
                         <input type="text" class="form-control"
                                id="inputCity" placeholder="Город"
                                name="city" required />
                         <div class="invalid-feedback">
-                            Пожалуйста введите Ваш город.
+                            
                         </div>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-12">
+                    <div class="form-group col-12" id="street-row">
                         <label for="inputAddress">Улица</label>
                         <input type="text" class="form-control"
                                id="inputStreet"
@@ -95,7 +132,7 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" id="house-row">
                         <label for="inputHouseNumber">Дом</label>
                         <input type="number" class="form-control"
                                id="inputHouse"
@@ -113,10 +150,16 @@
                                name="apartment" />
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary mb-4"> Создать </button>
-            </form>
-        </div>
-    </div>
+            </div>
 
-    <script src="~/Scripts/ProjectScripts/CreateUserValidation.js"></script>
-    <script src="~/Scripts/ProjectScripts/AttachImage.js"></script>
+            <div class="form-row">
+                <button id="back-btn" class="btn btn-primary mb-4 mr-2" style="display:none;"> Назад </button>
+                <button id="action-btn" class="btn btn-primary mb-4"> Далее </button>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<script src="~/Scripts/ProjectScripts/AttachImage.js"></script>
+<script src="~/Scripts/ProjectScripts/ScrollUserForm.js"></script>

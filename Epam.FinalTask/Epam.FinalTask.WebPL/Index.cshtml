@@ -1,5 +1,19 @@
-﻿@{
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@{
     Layout = null;
-    Response.Redirect("/messages");
+    string user = User.Identity.Name;
+    int userID = DependencyResolver.AccountBL.GetUserIDByLogin(user);
+
+    Response.Redirect("/user/profile?id=" + userID);
+}
+
+@section Header {
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Style/Style.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <title>Final Task</title>
 }
 

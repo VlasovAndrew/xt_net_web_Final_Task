@@ -6,6 +6,10 @@ textarea {
     resize: none;
 }
 
+.tab {
+    display: none;
+}
+
 @media (min-width: 768px) {
     .navbar-container {
         position: sticky;

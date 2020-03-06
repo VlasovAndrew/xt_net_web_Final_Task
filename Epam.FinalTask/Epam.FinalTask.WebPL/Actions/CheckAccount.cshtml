@@ -1,0 +1,17 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@using Newtonsoft.Json;
+@{
+    Layout = null;
+    string login = Request["login"];
+
+    IAccountBL accountBL = DependencyResolver.AccountBL;
+    if (accountBL.AccountExists(login))
+    {
+        Response.Write(JsonConvert.SerializeObject(new { status = "exist" }));
+    }
+    else {
+        Response.Write(JsonConvert.SerializeObject(new { status = "not exist" }));
+    }
+}
+

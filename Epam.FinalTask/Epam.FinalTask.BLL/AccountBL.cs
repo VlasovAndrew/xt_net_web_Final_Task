@@ -21,23 +21,7 @@ namespace Epam.FinalTask.BLL
         {
             _accountDao = accountDao;
         }
-        public bool AddAccount(string login, string password, int userID = 0)
-        {
-            bool accountExists = _accountDao.AccountExists(login);
-            if (accountExists) {
-                return false;
-            }
-
-            Account account = new Account()
-            {
-                Login = login,
-                Password = CreatePassword(password),
-                UserID = userID,
-            };
-
-            _accountDao.Add(account);
-            return true;
-        }
+        
         public void AttachUserToAccount(string login, int userID)
         {
             _accountDao.AttachUserToAccount(login, userID);
@@ -58,6 +42,31 @@ namespace Epam.FinalTask.BLL
             return true;
         }
 
+        public bool AccountExists(string login)
+        {
+            return _accountDao.AccountExists(login);
+        }
+
+        public Account Add(Account account)
+        {
+            return _accountDao.Add(account);
+        }
+
+        public Account СreateAccount(string login, string password, int userID = 0)
+        {
+            Account account = new Account()
+            {
+                Login = login,
+                Password = CreatePassword(password),
+                UserID = userID,
+            };
+            return account;
+        }
+
+        public int GetUserIDByLogin(string login)
+        {
+            return _accountDao.GetUserIDByLogin(login);
+        }
 
         private byte[] GetSaltFromHash(byte[] hash)
         {
@@ -72,10 +81,8 @@ namespace Epam.FinalTask.BLL
             new RNGCryptoServiceProvider().GetBytes(salt);
             return HashPassword(password, salt);
         }
-
         private byte[] HashPassword(string password, byte[] salt) 
         {
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[saltSize]);
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
             byte[] hash = pbkdf2.GetBytes(hashSize);
 

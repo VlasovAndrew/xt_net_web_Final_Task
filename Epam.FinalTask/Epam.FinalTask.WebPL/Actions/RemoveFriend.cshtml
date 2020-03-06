@@ -1,0 +1,18 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@{
+    Layout = null;
+
+    if (!int.TryParse(Request["userID"], out var userID)) {
+        Response.StatusCode = 404;
+        return;
+    }
+
+    if (!int.TryParse(Request["friendID"], out var friendID)) {
+        Response.StatusCode = 404;
+        return;
+    }
+
+    IUserBL userBL = DependencyResolver.UserBL;
+    userBL.RemoveFriend(userID, friendID);
+}

@@ -1,11 +1,25 @@
 ﻿@using Epam.FinalTask.BLL.Interfaces;
 @using Epam.FinalTask.Ioc;
 @using Epam.FinalTask.Entities;
-
+@using Epam.FinalTask.WebPL.Helpers;
 @{
     Layout = "~/Layouts/_Layout.cshtml";
-    // Get user ID
-    int userID = 1;
+
+
+    string queryStr = Request.QueryString["ID"];
+    if (!queryStr.IsInt() || queryStr.IsEmpty())
+    {
+        Response.Redirect("/error");
+    }
+
+    int userID = int.Parse(queryStr);
+    IAccountBL accountBL = DependencyResolver.AccountBL;
+    int authorizedUser = accountBL.GetUserIDByLogin(User.Identity.Name);
+    if (userID != authorizedUser)
+    {
+        Response.Redirect("~/error");
+    }
+
     IChannelBL channelBL = DependencyResolver.ChannelBL;
     IEnumerable<Channel> channels = channelBL.GetUserChannels(userID);
 

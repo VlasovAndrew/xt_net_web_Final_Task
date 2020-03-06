@@ -14,5 +14,8 @@ namespace Epam.FinalTask.DAL.Interfaces
         IEnumerable<User> GetAll();
         void DeleteById(int id);
         void Update(User user);
+
+        void AddFriend(int userID, int friendID);
+        void DeleteFriend(int userID, int friendID);
     }
 }

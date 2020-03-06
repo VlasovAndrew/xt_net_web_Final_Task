@@ -11,6 +11,10 @@ namespace Epam.FinalTask.BLL.Interfaces
     {
         UserDTO GetById(int id);
         IEnumerable<UserDTO> GetAll();
-        UserDTO Add(UserDTO userDTO); 
+        UserDTO Add(UserDTO userDTO);
+        void AddFriend(int userID, int friendID);
+        void RemoveFriend(int userID, int friendID);
+        IEnumerable<UserDTO> Search(Dictionary<string, string> searchParams);
+        void Update(UserDTO user);
     }
 }

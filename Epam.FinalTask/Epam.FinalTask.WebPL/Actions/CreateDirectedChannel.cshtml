@@ -4,8 +4,15 @@
 @{
     Layout = null;
 
-    int fromUser = int.Parse(Request["fromUserID"]);
-    int toUser = int.Parse(Request["toUserID"]);
+    if (!int.TryParse(Request["fromUserID"], out var fromUser)) {
+        Response.StatusCode = 404;
+        return;
+    }
+
+    if (!int.TryParse(Request["toUserID"], out var toUser)) {
+        Response.StatusCode = 404;
+        return;
+    }
 
     IChannelBL channelBL = DependencyResolver.ChannelBL;
     Channel channel = channelBL.CreateDirectedChannel("Личные сообщения", fromUser, toUser);

@@ -5,8 +5,16 @@
 @{
     Layout = null;
 
-  int userID = int.Parse(Request["UserID"]);
-    int channelID = int.Parse(Request["ChannelID"]);
+    if (!int.TryParse(Request["UserID"], out var userID)) {
+        Response.StatusCode = 404;
+        return;
+    }
+
+    if (!int.TryParse(Request["ChannelID"], out var channelID)) {
+        Response.StatusCode = 404;
+        return;
+    }
+
     string text = Request["Text"];
 
     IChannelBL channelBL = DependencyResolver.ChannelBL;

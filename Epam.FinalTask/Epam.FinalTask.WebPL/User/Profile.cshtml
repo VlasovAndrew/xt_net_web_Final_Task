@@ -3,17 +3,18 @@
 @using Epam.FinalTask.BLL.Interfaces;
 @{
     Layout = "~/Layouts/_Layout.cshtml";
-    string queryId = Request.QueryString["ID"];
-    if (queryId.IsEmpty() || !queryId.IsInt())
-    {
+
+    if (IsPost) {
         Response.Redirect("~/error");
     }
 
-    IUserBL userBL = DependencyResolver.UserBL;
-    int id = int.Parse(queryId);
-    UserDTO user = userBL.GetById(id);
-
+    if (!int.TryParse(Request.QueryString["id"], out var id)) {
+        Response.Redirect("~/error");
+        return;
+    }   
     
+    IUserBL userBL = DependencyResolver.UserBL;
+    UserDTO user = userBL.GetById(id);
 }
 
     <section class="col-md-8 col-lg-8 mt-2 bg-white rounded">

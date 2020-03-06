@@ -28,16 +28,8 @@ namespace Epam.FinalTask.DAL
                 using (SqlCommand command = new SqlCommand("AddUser", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("@Name", SqlDbType.NVarChar).Value = user.Name;
-                    command.Parameters.Add("@Lastname", SqlDbType.NVarChar).Value = user.Surname;
-                    command.Parameters.Add("@Birthday", SqlDbType.Date).Value = user.Birthday;
-                    command.Parameters.Add("@City", SqlDbType.NVarChar).Value = user.City;
-                    command.Parameters.Add("@Street", SqlDbType.NVarChar).Value = user.Street;
-                    command.Parameters.Add("@HouseNumber", SqlDbType.NVarChar).Value = user.HouseNumber;
-                    command.Parameters.Add("@ApartmentNumber", SqlDbType.NVarChar).Value = user.ApartmentNumber;
-                    command.Parameters.Add("@ProfilePhoto", SqlDbType.NVarChar).Value = user.ImagePath;
+                    FillUserCommand(command, user);
                     command.Parameters.Add("@userID", SqlDbType.Int).Direction = ParameterDirection.Output;
-            
                     connection.Open();
                     command.ExecuteNonQuery();
                     
@@ -48,9 +40,49 @@ namespace Epam.FinalTask.DAL
             }
         }
 
+        public void AddFriend(int userID, int friendID)
+        {
+            // Check users and friends
+            User user = GetById(userID);
+            User friend = GetById(friendID);
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("AddFriend", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    command.Parameters.Add("@friendID", SqlDbType.Int).Value = friendID;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public void DeleteById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public void DeleteFriend(int userID, int friendID)
+        {
+            User user = GetById(userID);
+            if (!user.Friends.Contains(friendID))
+            {
+                return;
+            }
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("RemoveFriend", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    command.Parameters.Add("@friendID", SqlDbType.Int).Value = friendID;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public IEnumerable<User> GetAll()
@@ -115,7 +147,17 @@ namespace Epam.FinalTask.DAL
 
         public void Update(User user)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("UpdateUser", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = user.ID;
+                    FillUserCommand(command, user);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         private IEnumerable<int> GetUserFriends(int userID)
@@ -137,5 +179,17 @@ namespace Epam.FinalTask.DAL
             }
             return friendID;
         }
+
+        private void FillUserCommand(SqlCommand command, User user) {
+            command.Parameters.Add("@Name", SqlDbType.NVarChar).Value = user.Name;
+            command.Parameters.Add("@Lastname", SqlDbType.NVarChar).Value = user.Surname;
+            command.Parameters.Add("@Birthday", SqlDbType.Date).Value = user.Birthday;
+            command.Parameters.Add("@City", SqlDbType.NVarChar).Value = user.City;
+            command.Parameters.Add("@Street", SqlDbType.NVarChar).Value = user.Street;
+            command.Parameters.Add("@HouseNumber", SqlDbType.NVarChar).Value = user.HouseNumber;
+            command.Parameters.Add("@ApartmentNumber", SqlDbType.NVarChar).Value = user.ApartmentNumber;
+            command.Parameters.Add("@ProfilePhoto", SqlDbType.NVarChar).Value = user.ImagePath;
+        }
+
     }
 }

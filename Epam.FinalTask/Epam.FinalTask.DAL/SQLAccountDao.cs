@@ -44,7 +44,10 @@ namespace Epam.FinalTask.DAL
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@login", SqlDbType.NVarChar).Value = account.Login;
                     command.Parameters.Add("@password", SqlDbType.VarBinary).Value = account.Password;
-                    command.Parameters.Add("@userID", SqlDbType.Int).Value = account.UserID;
+                    if (account.UserID != 0)
+                    {
+                        command.Parameters.Add("@userID", SqlDbType.Int).Value = account.UserID;
+                    }
                     command.Parameters.Add("@accountID", SqlDbType.Int).Direction = ParameterDirection.Output;
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -76,16 +79,23 @@ namespace Epam.FinalTask.DAL
             {
                 using (SqlCommand command = new SqlCommand("GetAccountByLogin", connection))
                 {
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
-                    command.Parameters.Add("@login", System.Data.SqlDbType.NVarChar).Value = login;
-
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@login", SqlDbType.NVarChar).Value = login;
                     connection.Open();
                     var reader = command.ExecuteReader();
-
+                    
+                    reader.Read();
                     account.ID = (int)reader["ID"];
                     account.Login = login;
                     account.Password = (byte[])reader["Password"];
-                    account.UserID = (int)reader["UserID"];
+                    var userID = reader["UserID"];
+                    if (userID is DBNull)
+                    {
+                        account.UserID = 0;
+                    }
+                    else {
+                        account.UserID = (int)userID;
+                    }
                 }
             }
             return account;
@@ -102,7 +112,15 @@ namespace Epam.FinalTask.DAL
                     command.Parameters.Add("@userID", SqlDbType.Int).Direction = ParameterDirection.Output;
                     connection.Open();
                     command.ExecuteNonQuery();
-                    return (int)command.Parameters["@userID"].Value;
+
+                    var res = command.Parameters["@userID"].Value;
+                    if (res is DBNull)
+                    {
+                        return 0;
+                    }
+                    else {
+                        return (int)res;
+                    }
                 }
             }
         }

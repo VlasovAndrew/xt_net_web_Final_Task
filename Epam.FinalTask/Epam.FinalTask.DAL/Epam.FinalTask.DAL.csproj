@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="SQLAccountDao.cs" />
     <Compile Include="SQLMessageDao.cs" />
-    <Compile Include="RAMUserDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLChannelDao.cs" />
     <Compile Include="SQLUserDao.cs" />

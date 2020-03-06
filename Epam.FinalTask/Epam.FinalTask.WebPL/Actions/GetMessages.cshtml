@@ -6,12 +6,11 @@
 @if (!IsPost)
 {
     string queryStr = Request["ID"];
-    if (!queryStr.IsInt() || queryStr.IsEmpty())
-    {
-        Response.Redirect("~/error");
+    if (!int.TryParse(Request["id"], out var channelID)) {
+        Response.StatusCode = 404;
+        return;
     }
 
-    int channelID = int.Parse(queryStr);
     IChannelBL channelBL = DependencyResolver.ChannelBL;
     IMessageBL messageBL = DependencyResolver.MessageBL;
 

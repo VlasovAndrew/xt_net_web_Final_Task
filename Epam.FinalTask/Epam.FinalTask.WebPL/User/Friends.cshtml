@@ -1,0 +1,27 @@
+﻿@using Epam.FinalTask.Entities;
+@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@{
+    Layout = "~/Layouts/_Layout.cshtml";
+
+    if (!int.TryParse(Request.QueryString["ID"], out var userID)) {
+        Response.Redirect("~/error");
+        return;
+    }
+
+    IUserBL userBL = DependencyResolver.UserBL;
+    UserDTO user = userBL.GetById(userID);
+    List<UserDTO> friends = new List<UserDTO>();
+    foreach (var id in user.Friends)
+    {
+        friends.Add(userBL.GetById(id));
+    }
+}
+<section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
+     @foreach (var friend in friends)
+     {
+         <div>
+             @friend.Name
+         </div>
+     }
+</section>

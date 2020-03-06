@@ -1,36 +1,59 @@
-﻿@{
+﻿@using Epam.FinalTask.WebPL.Helpers;
+@{
     Layout = "~/Layouts/_SimpleLayout.cshtml";
+    string errorMessage = null;
+    if (IsPost)
+    {
+        string login = Request["login"].ToLower();
+        string password = Request["password"].ToLower();
+
+        errorMessage = LoginRequests.SignIn(login, password);
+        if (errorMessage == null)
+        {
+            Response.Redirect("~");
+        }
+    }
 }
 
 <div class="row justify-content-center">
     <div class="col-lg-3 col-md-5 col-sm-8 mt-4 bg-white rounded">
         <!-- Form -->
-        <form method="post" novalidate enctype="multipart/form-data">
+        <form method="post" novalidate>
             <p class="h4 mb-4 mt-4 text-center">Вход в аккаунт</p>
 
             <div class="form-row">
-                <div class="form-group">
+                <div class="form-group col-12">
                     <label for="inputLogin">Логин</label>
                     <input type="text" class="form-control" name="login"
-                           id="inputLogin" placeholder="" required />
+                           id="inputLogin" value="@Request["login"]" required />
                     <div class="invalid-feedback">
                         Пожалуйста введите логин.
                     </div>
                 </div>
             </div>
 
-            <div class="form-row"> 
-                <div class="form-group">
+            <div class="form-row">
+                <div class="form-group col-12">
                     <label for="inputPassword">Пароль</label>
-                    <input type="text" class="form-control" name="password"
-                           id="inputPassword" placeholder="" required />
+                    <input type="password" class="form-control" name="password"
+                           id="inputPassword" value="@Request["password"]" required />
                     <div class="invalid-feedback">
                         Пожалуйста введите пароль.
                     </div>
                 </div>
             </div>
-
+            <p class="text-center">
+                <a href="~/User/CreateUser"> Создать аккаунт </a>
+            </p>
+            
+            @if (errorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    @errorMessage
+                </div>
+            }
             <button type="submit" class="btn btn-primary mb-4"> Войти </button>
         </form>
     </div>
 </div>
+<script src="~/Scripts/ProjectScripts/Validation.js"></script>
