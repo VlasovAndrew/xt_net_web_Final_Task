@@ -7,16 +7,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-    <link href="~/Style/_Style.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <title>Final Task</title>
+    @RenderPage("~/Shared/_Head.cshtml")
 </head>
 <body>
     <input type="hidden" value="@userID" id="user-id" />
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <nav class="col-sm-2 col-md-2 col-lg-2 mx-2 my-2 h-50 bg-white rounded">
                 <ul class="navbar-nav">

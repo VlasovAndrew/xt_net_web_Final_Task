@@ -65,7 +65,7 @@ namespace Epam.FinalTask.WebPL.Helpers
             }
             UserDTO userDTO = new UserDTO();
 
-            if (apartmentParam != null)
+            if (apartmentParam != null && apartmentParam != "")
             {
                 if (!int.TryParse(apartmentParam, out var apartmentNumber) 
                     || apartmentNumber <= 0
@@ -102,6 +102,11 @@ namespace Epam.FinalTask.WebPL.Helpers
             user = _userBL.Add(user);
             account = _accountBL.Add(account);
             _accountBL.AttachUserToAccount(account.Login, user.ID);
+        }
+
+        public static string MakeImageString(byte[] image)
+        {
+            return $"data:image;base64, {Convert.ToBase64String(image)}";
         }
     }
 }

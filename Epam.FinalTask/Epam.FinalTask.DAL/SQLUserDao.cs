@@ -42,9 +42,25 @@ namespace Epam.FinalTask.DAL
 
         public void AddFriend(int userID, int friendID)
         {
-            // Check users and friends
-            User user = GetById(userID);
-            User friend = GetById(friendID);
+            User user, friend;
+            try
+            {
+                user = GetById(userID);
+            }
+            catch (ArgumentException) 
+            {
+                throw;   
+            }
+
+            try
+            {
+                friend = GetById(friendID);
+            }
+            catch (ArgumentException) 
+            {
+                throw new ArgumentException($"Invalid freind id = {friendID}", "friendID");
+            }
+            
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 using (SqlCommand command = new SqlCommand("AddFriend", connection))
@@ -120,7 +136,9 @@ namespace Epam.FinalTask.DAL
                     command.Parameters.Add("@userID", SqlDbType.Int).Value = id;
                     connection.Open();
                     var reader = command.ExecuteReader();
-                    reader.Read();
+                    if (!reader.Read()) {
+                        throw new ArgumentException("Invalid user id", "id");
+                    }
                     
                     user = new User()
                     {
@@ -190,6 +208,5 @@ namespace Epam.FinalTask.DAL
             command.Parameters.Add("@ApartmentNumber", SqlDbType.NVarChar).Value = user.ApartmentNumber;
             command.Parameters.Add("@ProfilePhoto", SqlDbType.NVarChar).Value = user.ImagePath;
         }
-
     }
 }

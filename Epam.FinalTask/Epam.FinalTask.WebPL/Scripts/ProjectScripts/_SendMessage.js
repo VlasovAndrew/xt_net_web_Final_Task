@@ -5,6 +5,9 @@ let sendMessage = () => {
     let userID = document.getElementById('user-id').value;
     let channelID = document.getElementById('channel-id').value;
     let text = messageArea.value;
+    if (text.length > 200) {
+        return;
+    }
     messageArea.value = '';
     $.post("/actions/SendMessage", {
         UserID: userID,

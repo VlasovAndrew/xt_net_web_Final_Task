@@ -2,18 +2,16 @@
 @using Epam.FinalTask.Ioc;
 @{
     Layout = null;
-    string user = User.Identity.Name;
-    int userID = DependencyResolver.AccountBL.GetUserIDByLogin(user);
+    if (!User.IsInRole("admin"))
+    {
 
-    Response.Redirect("/user/profile?id=" + userID);
-}
+        string user = User.Identity.Name;
+        int userID = DependencyResolver.AccountBL.GetUserIDByLogin(user);
 
-@section Header {
-    <meta name="viewport" content="width=device-width" />
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-    <link href="~/Style/Style.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <title>Final Task</title>
+        Response.Redirect("/user/profile?id=" + userID);
+    }
+    else {
+        Response.Redirect("~/search");
+    }
 }
 

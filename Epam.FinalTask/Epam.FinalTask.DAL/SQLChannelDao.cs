@@ -48,7 +48,10 @@ namespace Epam.FinalTask.DAL
                     connection.Open();
 
                     var reader = command.ExecuteReader();
-                    reader.Read();
+                    if (!reader.Read()) 
+                    {
+                        throw new ArgumentException($"Invalid channel id = {channelID}", "id");
+                    }
                     channel.Title = (string)reader["Title"];
                     channel.Directed = (bool)reader["Directed"];
                 }

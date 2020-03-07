@@ -1,0 +1,26 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.WebPL.Helpers;
+@using Epam.FinalTask.Entities;
+@using Epam.FinalTask.Ioc;
+@{
+    Layout = "~/Layouts/_AdminLayout.cshtml";
+    if (IsPost) { 
+        string login = Request.Form["login"];
+        string password = Request.Form["password"];
+        Tuple<string, Account> account = UserRequests.CreateAccount(login, password);
+        IAccountBL accountBL = DependencyResolver.AccountBL;
+        accountBL.Add(account.Item2);
+        RoleProvider roleProvider = Roles.Provider;
+        roleProvider.AddUsersToRoles(new string[] { login }, new string[] { "admin" });
+        Response.Redirect("~");
+    }
+}
+   
+        <div class="col-3 mt-2 bg-white rounded p-3">
+            <!-- Form -->
+            <form method="post" novalidate="" enctype="multipart/form-data" id="main-form">
+                @RenderPage("~/Shared/_AccountForm.cshtml")
+                <button type="submit" class="btn btn-primary"> Создать </button>
+            </form>
+        </div>
+    

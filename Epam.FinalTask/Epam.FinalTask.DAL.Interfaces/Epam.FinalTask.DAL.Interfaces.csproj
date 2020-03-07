@@ -62,6 +62,7 @@
     <Compile Include="IAccountDao.cs" />
     <Compile Include="IChannelDao.cs" />
     <Compile Include="IMessageDao.cs" />
+    <Compile Include="IRoleDao.cs" />
     <Compile Include="IUserDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

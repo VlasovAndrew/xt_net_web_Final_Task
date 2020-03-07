@@ -2,10 +2,17 @@
 @using Epam.FinalTask.Entities;
 @using Epam.FinalTask.Ioc;
 @{
-    Layout = "~/Layouts/_Layout.cshtml";
+    if (User.IsInRole("admin"))
+    {
+        Layout = "~/Layouts/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Layouts/_Layout.cshtml";
+    }
 
     Dictionary<string, string> searchRequest = new Dictionary<string, string>();
-    
+
     searchRequest["name"] = Request["name"];
     searchRequest["surname"] = Request["surname"];
     searchRequest["city"] = Request["city"];
@@ -16,14 +23,26 @@
     IUserBL userBL = DependencyResolver.UserBL;
     IEnumerable<UserDTO> users = userBL.Search(searchRequest);
 
-    int loggedUserID = DependencyResolver.AccountBL.GetUserIDByLogin(User.Identity.Name);
-    UserDTO loggedUser = DependencyResolver.UserBL.GetById(loggedUserID);
+    IAccountBL accountBL = DependencyResolver.AccountBL;
 
+    UserDTO loggedUser = null;
+    int loggedUserID = -1;
+
+    if (!User.IsInRole("admin")) 
+    { 
+        loggedUserID = accountBL.GetUserIDByLogin(User.Identity.Name);
+        loggedUser = userBL.GetById(loggedUserID);
+    }
+    
 }
 
 <section class="col-md-8 col-lg-7 mt-2 h-50 bg-white rounded">
+    <div class="mt-2">
+        <h4> Поиск людей </h4>
+    </div>
+
     @if (users.Count() == 0) { 
-        <div>
+        <div class="my-3">
             С такими параметрами не найдено пользователей.
         </div>
     }
@@ -40,24 +59,27 @@
                     <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" class="img-thumbnail small-img" />
                 </div>
                 <div class="col-lg-6 p-0">
-                    <h4> @user.Name @user.Surname </h4>
+                    <h4> <span class="text-capitalize"> @user.Name </span> <span class="text-capitalize"> @user.Surname </span>   </h4>
                     <div> @user.City </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="mb-2">
-                        @if (loggedUser.Friends.Contains(user.ID))
-                        {
-                            <button class="btn btn-primary w-100 friend-btn remove-friend"> Удалить из друзей </button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary w-100 friend-btn add-friend"> Добавить в друзья </button>
-                        }
-                    </div>
-                    <div>
-                        <button class="btn btn-primary w-100 message-btn"> Написать сообщение </button>
-                    </div>
-                </div>
+                @if (!User.IsInRole("admin")) 
+                { 
+                    <div class="col-lg-3">
+                        <div class="mb-2">
+                            @if (loggedUser.Friends.Contains(user.ID))
+                            {
+                                <button class="btn btn-primary w-100 friend-btn remove-friend"> Удалить из друзей </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary w-100 friend-btn add-friend"> Добавить в друзья </button>
+                            }
+                        </div>
+                        <div>
+                            <button class="btn btn-primary w-100 message-btn"> Написать сообщение </button>
+                        </div>
+                    </div>    
+                }
             </div>
         
     }
@@ -90,13 +112,14 @@
 
         <div class="form-row">
             <div class="form-group col-12">
-                <input type="text" id="street-input" name="street" class="form-control" placeholder="Улица" />
+                <input type="text" id="street-input" name="street" value="@Request["street"]" 
+                       class="form-control" placeholder="Улица" />
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-12">
-                <input type="text" name="house" class="form-control" placeholder="Дом" />
+                <input type="text" name="house" value="@Request["house"]" class="form-control" placeholder="Дом" />
             </div>
         </div>
 
@@ -106,16 +129,15 @@
 
         <div class="form-row">
             <div class="form-group col-6">
-                <input type="number" name="lowerAgeBound" class="form-control" placeholder="От" />
+                <input type="number" name="lowerAgeBound" value="@Request["lowerAgeBound"]" class="form-control" placeholder="От" />
             </div>
             <div class="form-group col-6">
-                <input type="number" name="upperAgeBound" class="form-control" placeholder="До" />
+                <input type="number" name="upperAgeBound" value="@Request["upperAgeBound"]" class="form-control" placeholder="До" />
             </div>
         </div>
 
         <button type="submit" id="search-btn" class="btn btn-primary"> Поиск</button>
     </form>
-    
 </div>
 
 <script src="~/Scripts/ProjectScripts/MessageFriendBtn.js"></script>

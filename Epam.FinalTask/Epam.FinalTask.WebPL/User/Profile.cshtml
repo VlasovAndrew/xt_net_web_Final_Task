@@ -1,33 +1,47 @@
 ﻿@using Epam.FinalTask.Entities;
 @using Epam.FinalTask.Ioc;
 @using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.WebPL.Helpers;
 @{
     Layout = "~/Layouts/_Layout.cshtml";
 
-    if (IsPost) {
+    if (IsPost) 
+    {
         Response.Redirect("~/error");
+        return;
     }
 
     if (!int.TryParse(Request.QueryString["id"], out var id)) {
         Response.Redirect("~/error");
         return;
-    }   
-    
+    }
+
     IUserBL userBL = DependencyResolver.UserBL;
-    UserDTO user = userBL.GetById(id);
+    UserDTO user;
+    try
+    {
+        user = userBL.GetById(id);
+    }
+    catch (ArgumentException) {
+        Response.Redirect("~/error");
+        return;
+    }
 }
 
     <section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
         <div class="row p-2">
             <div class="col-lg-3 col-md-4">
-                <img src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" alt="Ваша аватарка" class="img-thumbnail">
+                <img src="@UserRequests.MakeImageString(user.Avatar)" alt="Ваша аватарка" class="img-thumbnail">
             </div>
 
             <div class="col-lg-9">
 
-                <h4 class="my-0">@user.Name @user.Surname</h4>
+                <h4 class="my-0"> 
+                    <span class="text-capitalize"> @user.Name </span>
+                    <span class="text-capitalize"> @user.Surname </span> 
+                </h4>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-4">
                         <div class="mt-2">
                             Дата рождения:
                         </div>
@@ -53,12 +67,12 @@
                     </div>
                     <div class="col-3 p-0">
                         <div class="mt-2">
-                            @user.Birthday
+                            @user.Birthday.ToString("dd/MM/yyyy")
                         </div>
-                        <div class="mt-2">
+                        <div class="mt-2 text-capitalize">
                             @user.City
                         </div>
-                        <div class="mt-2">
+                        <div class="mt-2 text-capitalize">
                             @user.Street
                         </div>
 
@@ -69,7 +83,7 @@
                         @if (user.ApartmentNumber != 0)
                         { 
                             <div class="mt-2">
-                                11
+                                @user.ApartmentNumber
                             </div>
                         }
                     </div>

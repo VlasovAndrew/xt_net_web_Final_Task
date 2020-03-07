@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PL", "PL", "{A28531EA-B73F-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epam.FinalTask.Logger", "Epam.FinalTask.Logger\Epam.FinalTask.Logger.csproj", "{196A4133-EC1E-41D5-8BA9-C016C1FE2EEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epam.FinalTask.RoleProviders", "Epam.FinalTask.RoleProvider\Epam.FinalTask.RoleProviders.csproj", "{AF6B9389-E494-40D3-9B91-A3FD78E27680}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{196A4133-EC1E-41D5-8BA9-C016C1FE2EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{196A4133-EC1E-41D5-8BA9-C016C1FE2EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{196A4133-EC1E-41D5-8BA9-C016C1FE2EEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF6B9389-E494-40D3-9B91-A3FD78E27680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF6B9389-E494-40D3-9B91-A3FD78E27680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF6B9389-E494-40D3-9B91-A3FD78E27680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF6B9389-E494-40D3-9B91-A3FD78E27680}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +84,7 @@ Global
 		{AD9984D5-D270-4879-A6EE-CDB0B2A08463} = {D79E3C67-2CBB-4BCB-802C-7ECD33B2500F}
 		{E00285AA-0662-4847-80DD-E6626F30D5DF} = {A28531EA-B73F-4124-B15F-81E1EAAAB5F7}
 		{196A4133-EC1E-41D5-8BA9-C016C1FE2EEE} = {BA32B4BE-30B1-49D8-AEA3-B2995C693E88}
+		{AF6B9389-E494-40D3-9B91-A3FD78E27680} = {BA32B4BE-30B1-49D8-AEA3-B2995C693E88}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B185FC0-D6A1-45CE-9A8D-6C8A07B6507D}

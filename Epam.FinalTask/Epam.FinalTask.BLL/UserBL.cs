@@ -13,7 +13,6 @@ using System.Web.Helpers;
 using System.Web.Hosting;
 using Epam.FinalTask.Logger;
 
-
 namespace Epam.FinalTask.BLL
 {
     public class UserBL : IUserBL
@@ -51,8 +50,16 @@ namespace Epam.FinalTask.BLL
         public UserDTO GetById(int id)
         {
             _logger.Info($"Getting user with id = {id}");
-
-            User user = _userDao.GetById(id);
+            User user;
+            try {
+                user = _userDao.GetById(id);
+            }
+            catch (ArgumentException e)
+            {
+                _logger.Error(e.Message, e);
+                throw;
+            }
+            
             return CreateUserDTO(user);
         }
 
@@ -107,6 +114,9 @@ namespace Epam.FinalTask.BLL
                 DeleteImage(currentUser.ImagePath);
             }   
             User updatedUser = CreateUser(userDTO);
+            if (currentUser.ImagePath != null) {
+                updatedUser.ImagePath = currentUser.ImagePath;
+            }
             _userDao.Update(updatedUser);
         }
 

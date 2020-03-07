@@ -11,20 +11,25 @@ let makeInvalidInput = (inputRow, input, message) => {
 }
 
 let validateAccountData = (form) => {
+    let loginRegex = /^[\w]{5,20}$/g;
+
     let loginRow = document.getElementById('login-row');
     let loginInput = loginRow.querySelector('input');
     
     if (loginInput.value == "") {
-        makeInvalidInput(loginRow, loginInput, 'Пожалуйста введите Ваш логин.');
-        
+        makeInvalidInput(loginRow, loginInput, 'Пожалуйста введите Ваш логин.');        
         return;    
     }
 
+    if (!loginRegex.test(loginInput.value)) {
+        makeInvalidInput(loginRow, loginInput, 'Логин может содержать только буквы, цифры и знак подчеркивания, длина от 5 до 20 символов');
+        return;
+    }
+    
     let passwordRow = form.querySelector('#password-row');
     let passwordInput = passwordRow.querySelector('input');
     if (passwordInput.value == "") {
-        makeInvalidInput(passwordRow, passwordInput, 'Пожалуйста введите Ваш пароль.');
-        
+        makeInvalidInput(passwordRow, passwordInput, 'Пожалуйста введите Ваш пароль.');    
         return;
     }
 
@@ -52,6 +57,8 @@ let validateAccountData = (form) => {
 }
 
 let validateUserData = (form) => {
+    let nameSurnameReg = /^[а-яА-Я]{2,20}$/g;
+    
     let nameRow = document.getElementById('name-input');
     let nameInput = nameRow.querySelector('input');
     if (nameInput.value == '') {
@@ -59,11 +66,20 @@ let validateUserData = (form) => {
         return;
     }
 
+    if (!nameSurnameReg.test(nameInput.value)) {
+        makeInvalidInput(nameRow, nameInput, 'Пожалуйста введите корректное имя русскими буквами.');
+        return;
+    }
+    nameSurnameReg.lastIndex = 0;
     let lastnameRow = document.getElementById('lastname-input');
     let lastnameInput = lastnameRow.querySelector('input');
-
     if (lastnameInput.value == '') {
         makeInvalidInput(lastnameRow, lastnameInput, 'Пожалуйста введите фамилию.');
+        return;
+    }
+    
+    if (!nameSurnameReg.test(lastnameInput.value)) {
+        makeInvalidInput(lastnameRow, lastnameInput, 'Пожалуйста введите корректную фамилию русскими буквами.');
         return;
     }
 
@@ -73,7 +89,8 @@ let validateUserData = (form) => {
         makeInvalidInput(dateRow, dateInput, 'Пожалуйста введите дату рождения.'); 
         return;
     }
-    // validate input date
+    console.log(dateInput.value);
+
 
     let cityRow = document.getElementById('city-row');
     let cityInput = cityRow.querySelector('input');

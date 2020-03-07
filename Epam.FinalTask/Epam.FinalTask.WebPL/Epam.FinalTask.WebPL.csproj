@@ -135,6 +135,7 @@
     <Content Include="Actions\SignOut.cshtml" />
     <Content Include="Actions\CheckAccount.cshtml" />
     <Content Include="Error.cshtml" />
+    <Content Include="Layouts\_AdminLayout.cshtml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -148,7 +149,7 @@
     <Content Include="Scripts\ProjectScripts\ScrollUserForm.js" />
     <Content Include="Scripts\ProjectScripts\Seach.js" />
     <Content Include="Scripts\ProjectScripts\Validation.js" />
-    <Content Include="Scripts\ProjectScripts\_GetMessages.js" />
+    <Content Include="Scripts\ProjectScripts\GetMessages.js" />
     <Content Include="Scripts\ProjectScripts\MessageFriendBtn.js" />
     <Content Include="Scripts\ProjectScripts\GoToMessages.js" />
     <Content Include="Scripts\ProjectScripts\_SendMessage.js" />
@@ -219,7 +220,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Style\_Style.css" />
+    <Content Include="Style\Style.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -247,6 +248,9 @@
     <Content Include="User\Profile.cshtml" />
     <Content Include="User\Friends.cshtml" />
     <Content Include="User\Edit.cshtml" />
+    <Content Include="AddAdmin.cshtml" />
+    <Content Include="Shared\_Head.cshtml" />
+    <Content Include="Shared\_AccountForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -277,6 +281,10 @@
       <Project>{c7767950-b343-44c9-8d67-aebdfb83094a}</Project>
       <Name>Epam.FinalTask.Ioc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Epam.FinalTask.RoleProvider\Epam.FinalTask.RoleProviders.csproj">
+      <Project>{af6b9389-e494-40d3-9b91-a3fd78e27680}</Project>
+      <Name>Epam.FinalTask.RoleProviders</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -294,7 +302,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64226</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44388/</IISUrl>
+          <IISUrl>https://localhost:44389/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

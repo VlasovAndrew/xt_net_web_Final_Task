@@ -1,6 +1,7 @@
 ﻿@using Epam.FinalTask.Entities;
 @using Epam.FinalTask.BLL.Interfaces;
 @using Epam.FinalTask.Ioc;
+@using Epam.FinalTask.WebPL.Helpers;
 @{
     Layout = "~/Layouts/_Layout.cshtml";
 
@@ -10,18 +11,49 @@
     }
 
     IUserBL userBL = DependencyResolver.UserBL;
-    UserDTO user = userBL.GetById(userID);
+    UserDTO user;
+    try
+    {
+        user = userBL.GetById(userID);
+    }
+    catch (ArgumentException) {
+        Response.Redirect("~/error");
+        return;
+    }
+
     List<UserDTO> friends = new List<UserDTO>();
     foreach (var id in user.Friends)
     {
-        friends.Add(userBL.GetById(id));
+        try
+        {
+            friends.Add(userBL.GetById(id));
+        }
+        catch (ArgumentException) 
+        {
+            continue;
+        }
     }
 }
 <section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
+    <h4> Друзья </h4>
+
      @foreach (var friend in friends)
      {
-         <div>
-             @friend.Name
-         </div>
+    <div class="row my-2">
+        <div class="col-4">
+            <img src="@UserRequests.MakeImageString(friend.Avatar)" alt="фото" class="img-thumbnail">
+        </div>
+        <div class="p-0 col-4">
+            <div>
+                <span class="text-capitalize"> @friend.Name </span> <span class="text-capitalize"> @friend.Surname </span>
+            </div>
+            <div>
+               День рождения:  @friend.Birthday.ToString("dd/MM/yyyy")
+            </div>
+            <div>
+                @friend.City
+            </div>
+        </div>
+    </div>
      }
 </section>

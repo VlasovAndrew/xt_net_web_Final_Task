@@ -4,7 +4,8 @@
 @using Epam.FinalTask.WebPL.Helpers;
 @{
     Layout = "~/Layouts/_Layout.cshtml";
-    if (!int.TryParse(Request.QueryString["id"], out var userID)) {
+    if (!int.TryParse(Request.QueryString["id"], out var userID))
+    {
         Response.Redirect("~/error");
     }
 
@@ -14,109 +15,142 @@
         Response.Redirect("~/error");
     }
     IUserBL userBL = DependencyResolver.UserBL;
-}
+    string errorString = null;
 
-@if (!IsPost)
+    UserDTO user;
+    try
     {
-        UserDTO user = userBL.GetById(userID);
-        string apartmetNumber = (user.ApartmentNumber == 0 ? "" : user.ApartmentNumber.ToString());
-
-                <section class="col-lg-6 bg-white mt-2 h-25 rounded">
-                    <form method="post" novalidate="" enctype="multipart/form-data" id="main-form">
-
-                        <div class="text-center mt-3">
-                            <img class="img-thumbnail" src="@("data:image;base64," + Convert.ToBase64String(@user.Avatar))" id="user-image" alt="Фото" />
-                        </div>
-
-                        <div class="form-row">
-                            <label class="btn btn-primary">
-                                Изменить фото <input type="file" name="Image" id="user-image-input" hidden />
-                            </label>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6" id="name-input">
-                                <label for="inputName">Имя</label>
-                                <input type="text" class="form-control" name="name"
-                                       id="inputName" placeholder="Имя" value="@user.Name" />
-                                <div class="invalid-feedback">
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6" id="lastname-input">
-                                <label for="inputSurname">Фамилия</label>
-                                <input type="text" class="form-control" name="surname"
-                                       id="inputSurname" placeholder="Фамилия" value="@user.Surname" />
-                                <div class="invalid-feedback">
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-12" id="date-row">
-                                <label for="inputBirthday">Дата рождения</label>
-                                @Html.TextBox("birthday", @user.Birthday, new { type = "date", @class= "form-control" })
-                                <div class="invalid-feedback">
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-12" id="city-row">
-                                <label for="inputAddress">Город</label>
-                                <input type="text" class="form-control"
-                                       id="inputCity" placeholder="Город"
-                                       name="city" value="@user.City" />
-                                <div class="invalid-feedback">
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-12" id="street-row">
-                                <label for="inputAddress">Улица</label>
-                                <input type="text" class="form-control"
-                                       id="inputStreet"
-                                       placeholder="Улица"
-                                       name="street" value="@user.Street" />
-                                <div class="invalid-feedback">
-                                    Пожалуйста введите Вашу улицу.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6" id="house-row">
-                                <label for="inputHouseNumber">Дом</label>
-                                <input type="number" class="form-control"
-                                       id="inputHouse"
-                                       placeholder="Дом"
-                                       name="house" value="@user.HouseNumber" />
-                                <div class="invalid-feedback">
-                                    Пожалуйста введите номер Вашего дома.
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputApartmentNumber">Квартира</label>
-                                <input type="text" class="form-control"
-                                       id="inputApartmentNumber"
-                                       placeholder="Квартира"
-                                       name="apartment"  
-                                       value="@apartmetNumber" />
-                                </div>
-                            </div>
-                            
-                            <button class="btn btn-primary mb-2"> Изменить </button>
-                    </form>
-                </section>
-
+        user = userBL.GetById(userID);
+    }
+    catch (ArgumentException)
+    {
+        Response.Redirect("~/error");
+        return;
+    }
 }
-else {
+
+@if (IsPost)
+{
     Tuple<string, UserDTO> updatedUser = UserRequests.CreateUser(Request);
-    updatedUser.Item2.ID = userID;
-    // check error string
-    userBL.Update(updatedUser.Item2);
-    Response.Redirect("~");
+    if (updatedUser.Item1 != null)
+    {
+        errorString = updatedUser.Item1;
+    }
+    else
+    {
+        updatedUser.Item2.ID = userID;
+        userBL.Update(updatedUser.Item2);
+        Response.Redirect("~");
+    }
 }
+
+<section class="col-lg-6 bg-white mt-2 h-25 rounded">
+    <form method="post" novalidate="" enctype="multipart/form-data" id="main-form">
+
+        <div class="text-center mt-3">
+            <img class="img-thumbnail" src="@("data:image;base64," + Convert.ToBase64String(user.Avatar))" id="user-image" alt="Фото" />
+        </div>
+
+        <div class="form-row">
+            <label class="btn btn-primary">
+                Изменить фото <input type="file" name="Image" id="user-image-input" hidden />
+            </label>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6" id="name-input">
+                <label for="inputName">Имя</label>
+                <input type="text" class="form-control" name="name"
+                       id="inputName" placeholder="Имя" value="@user.Name" />
+                <div class="invalid-feedback">
+                </div>
+            </div>
+            <div class="form-group col-md-6" id="lastname-input">
+                <label for="inputSurname">Фамилия</label>
+                <input type="text" class="form-control" name="surname"
+                       id="inputSurname" placeholder="Фамилия" value="@user.Surname" />
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12" id="date-row">
+                <label for="inputBirthday">Дата рождения</label>
+                @Html.TextBox("birthday", @user.Birthday, new { type = "date", @class = "form-control" })
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-12" id="city-row">
+                <label for="inputAddress">Город</label>
+                <input type="text" class="form-control"
+                       id="inputCity" placeholder="Город"
+                       name="city" value="@user.City" />
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-12" id="street-row">
+                <label for="inputAddress">Улица</label>
+                <input type="text" class="form-control"
+                       id="inputStreet"
+                       placeholder="Улица"
+                       name="street" value="@user.Street" />
+                <div class="invalid-feedback">
+                    Пожалуйста введите Вашу улицу.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6" id="house-row">
+                <label for="inputHouseNumber">Дом</label>
+                <input type="number" class="form-control"
+                       id="inputHouse"
+                       placeholder="Дом"
+                       name="house" value="@user.HouseNumber" />
+                <div class="invalid-feedback">
+                    Пожалуйста введите номер Вашего дома.
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputApartmentNumber">Квартира</label>
+                @if (user.ApartmentNumber != 0)
+                {
+                    <input type="text" class="form-control"
+                           id="inputApartmentNumber"
+                           placeholder="Квартира"
+                           name="apartment"
+                           value="@user.ApartmentNumber" />
+                }
+                else 
+                { 
+                    <input type="text" class="form-control"
+                           id="inputApartmentNumber"
+                           placeholder="Квартира"
+                           name="apartment"
+                           value="" />
+                }
+
+
+            </div>
+        </div>
+        @if (errorString != null)
+        {
+            <div class="alert alert-danger">
+                @errorString
+            </div>
+        }
+
+        <button class="btn btn-primary mb-2"> Изменить </button>
+    </form>
+</section>
+<script src="~/Scripts/ProjectScripts/AttachImage.js"></script>

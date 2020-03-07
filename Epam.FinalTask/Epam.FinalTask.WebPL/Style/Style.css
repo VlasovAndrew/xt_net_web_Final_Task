@@ -10,6 +10,11 @@ textarea {
     display: none;
 }
 
+.channel:hover {
+    background: #DCDCDC;
+    cursor: pointer;
+}
+
 @media (min-width: 768px) {
     .navbar-container {
         position: sticky;

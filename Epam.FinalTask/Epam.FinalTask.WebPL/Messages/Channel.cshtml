@@ -4,18 +4,36 @@
 @{
     Layout = "~/Layouts/_Layout.cshtml";
 
-    int channelID = int.Parse(Request.QueryString["id"]);
-    Channel channel = DependencyResolver.ChannelBL.GetById(channelID);
+    if (IsPost) {
+        Response.Redirect("~/error");
+        return;
+    }
+
+    if (!int.TryParse(Request.QueryString["id"], out var channelID)) {
+        Response.Redirect("~/error");
+        return;
+    }
+    IChannelBL channelBL = DependencyResolver.ChannelBL;
+    Channel channel;
+    try
+    {
+        channel = channelBL.GetById(channelID);
+    }
+    catch (ArgumentException)
+    {
+        Response.Redirect("~/error");
+        return;
+    }
 }
 
-<section id="message-wall" class="col-lg-7 bg-white mt-2 h-25 rounded">
+<section id="message-wall" class="col-lg-7 col-mg-7 col-md-7 bg-white mt-2 h-25 rounded">
     <input type="hidden" value="@channel.ID" id="channel-id" />
     <div>
-        Сообщения
+        <h4> Сообщения </h4> 
     </div>
 </section>
 
-<div class="col-lg-2 ml-2 bg-white mt-2 pt-2 h-25 rounded">
+<div class="col-lg-2 col-mg-3 col-sm-3 col- ml-2 bg-white mt-2 pt-2 h-25 rounded">
     <div class="text-center">
         <h5> Написать сообщение </h5>
     </div>
@@ -25,4 +43,4 @@
     </div>
 </div>
 <script src="~/Scripts/ProjectScripts/_SendMessage.js"></script>
-<script src="~/Scripts/ProjectScripts/_GetMessages.js"></script>
+<script src="~/Scripts/ProjectScripts/GetMessages.js"></script>

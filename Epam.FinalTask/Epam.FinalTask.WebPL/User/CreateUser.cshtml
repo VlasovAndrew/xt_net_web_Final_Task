@@ -10,14 +10,26 @@
     string login = Request.Form["login"];
     string password = Request.Form["password"];
 
-    // check error string
+
     Tuple<string, Account> account = UserRequests.CreateAccount(login, password);
+    if (account.Item1 != null)
+    {
+        errorMessage = account.Item1;
+    }
+
     Tuple<string, UserDTO> user = UserRequests.CreateUser(Request);
+    if (user.Item1 != null)
+    {
+        errorMessage = user.Item1;
+    }
+    if (errorMessage != null) 
+    { 
+        UserRequests.CreateAccountWithUser(account.Item2, user.Item2);
 
-    UserRequests.CreateAccountWithUser(account.Item2, user.Item2);
-
-    LoginRequests.SignIn(login, password);
-    Response.Redirect("~");
+        LoginRequests.SignIn(login, password);
+        Response.Redirect("~");
+    }
+    
 }
 
 <div class="row justify-content-center">
@@ -27,42 +39,10 @@
             <p class="h4 mb-4 mt-4 text-center">Создать аккаунт</p>
 
             <div class="tab">
-                <div class="form-row">
-                    <div class="form-group col-12" id="login-row">
-                        <label for="inputLogin">Логин</label>
-                        <input type="text" class="form-control"
-                               id="inputLogin" placeholder="Логин"
-                               name="login"/>
-                        <div class="invalid-feedback">
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-12" id="password-row">
-                        <label for="inputPassword">Пароль</label>
-                        <input type="text" class="form-control"
-                               id="input-password" placeholder="Пароль"
-                               name="password" />
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-12" id="configrm-password-row">
-                        <label for="inputPassword">Повторите пароль</label>
-                        <input type="text" class="form-control"
-                               id="inputPasswordConfirm" placeholder="Пароль"
-                               name="second-password" />
-                        <div class="invalid-feedback">
-                            Пожалуйста повторите Ваш пароль.
-                        </div>
-                    </div>
-                </div>
-
+                @RenderPage("~/Shared/_AccountForm.cshtml")
             </div>
+
+            
 
             <div class="tab">
                 <div class="text-center mb-2">
@@ -79,17 +59,17 @@
                     <div class="form-group col-md-6" id="name-input">
                         <label for="inputName">Имя</label>
                         <input type="text" class="form-control" name="name"
-                               id="inputName" placeholder="Имя"  />
+                               id="inputName" placeholder="Имя" />
                         <div class="invalid-feedback">
-                            
+
                         </div>
                     </div>
                     <div class="form-group col-md-6" id="lastname-input">
                         <label for="inputSurname">Фамилия</label>
                         <input type="text" class="form-control" name="surname"
-                               id="inputSurname" placeholder="Фамилия"  />
+                               id="inputSurname" placeholder="Фамилия" />
                         <div class="invalid-feedback">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -99,9 +79,9 @@
                         <label for="inputBirthday">Дата рождения</label>
                         <input type="date" class="form-control"
                                id="inputBirthday"
-                               name="birthday"  />
+                               name="birthday" />
                         <div class="invalid-feedback">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -113,7 +93,7 @@
                                id="inputCity" placeholder="Город"
                                name="city" required />
                         <div class="invalid-feedback">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -151,12 +131,19 @@
                     </div>
                 </div>
             </div>
+            @if (errorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    @errorMessage
+                </div>
+
+            }
 
             <div class="form-row">
                 <button id="back-btn" class="btn btn-primary mb-4 mr-2" style="display:none;"> Назад </button>
                 <button id="action-btn" class="btn btn-primary mb-4"> Далее </button>
             </div>
-            
+
         </form>
     </div>
 </div>

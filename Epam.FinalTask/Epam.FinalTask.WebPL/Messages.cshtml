@@ -6,36 +6,47 @@
     Layout = "~/Layouts/_Layout.cshtml";
 
 
-    string queryStr = Request.QueryString["ID"];
-    if (!queryStr.IsInt() || queryStr.IsEmpty())
-    {
-        Response.Redirect("/error");
+    if (!int.TryParse(Request["id"], out var userID)) {
+        Response.Redirect("~/error");
+        return;
     }
 
-    int userID = int.Parse(queryStr);
     IAccountBL accountBL = DependencyResolver.AccountBL;
     int authorizedUser = accountBL.GetUserIDByLogin(User.Identity.Name);
     if (userID != authorizedUser)
     {
-        Response.Redirect("~/error");
+        Response.Redirect("~");
     }
 
     IChannelBL channelBL = DependencyResolver.ChannelBL;
     IEnumerable<Channel> channels = channelBL.GetUserChannels(userID);
 
+    List<Tuple<Channel, IEnumerable<UserDTO>>> channelsWithUsers = new List<Tuple<Channel, IEnumerable<UserDTO>>>();
+    foreach (var channel in channels)
+    {
+        IEnumerable<UserDTO> channelUsers = channelBL.GetChannelUsers(channel.ID).Where(user => user.ID != authorizedUser);
+        channelsWithUsers.Add(new Tuple<Channel, IEnumerable<UserDTO>>(channel, channelUsers));
+    }
 }
 
-<section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
+<section class="col-sm-8 col-md-8 col-lg-8 mt-2 bg-white h-25 rounded">
     <div class="my-2">
-        <h1> Сообщения </h1>
+        <h4> Сообщения </h4>
     </div>
 
-    @foreach (var channel in channels)
+    @if (channelsWithUsers.Count() == 0) { 
+        <div>
+            У вас пока нет сообщений.
+        </div>
+    }
+
+    @foreach (var channel in channelsWithUsers)
     {
         <div class="my-3 channel">
-            <input type="hidden" value="@channel.ID" />
-            <h3> @channel.Title </h3>
-            <div> Число сообщений: @channel.Messages.Count </div>
+            <input type="hidden" value="@channel.Item1.ID" />
+            <h5> @channel.Item1.Title </h5>
+            
+            <div> Ваша переписка с @string.Join(", ", channel.Item2.Select(user => $"{user.Name} {user.Surname}")) </div>
         </div>
     }
 </section>

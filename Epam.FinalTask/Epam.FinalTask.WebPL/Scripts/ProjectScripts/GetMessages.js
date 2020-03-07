@@ -10,7 +10,13 @@ let readMessages = (data) => {
         let messageRow = document.createElement('div');
         messageRow.classList.add("my-2");
         let userCaption = document.createElement('span');
-        userCaption.innerHTML = `${response[i].UserName}  ${response[i].UserSurname} ${response[i].SendingTime}`;
+        let messageDate = new Date(response[i].SendingTime);
+
+
+        userCaption.innerHTML = `От ${response[i].UserName}  
+            ${response[i].UserSurname} 
+            ${messageDate.toLocaleTimeString()}
+            ${ messageDate.toLocaleDateString()}`;
 
         let messageText = document.createElement('div');
         messageText.innerHTML = `${response[i].Text}`;

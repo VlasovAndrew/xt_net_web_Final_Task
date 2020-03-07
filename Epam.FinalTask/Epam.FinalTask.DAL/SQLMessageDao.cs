@@ -39,7 +39,10 @@ namespace Epam.FinalTask.DAL
                     command.Parameters.Add("@messageID", System.Data.SqlDbType.Int).Value = id;
                     connection.Open();
                     var reader = command.ExecuteReader();
-                    reader.Read();
+                    if (!reader.Read()) 
+                    {
+                        throw new ArgumentException($"Invalid message id = {id}", "id");
+                    }
                     message = new Message()
                     {
                         ID = id,
