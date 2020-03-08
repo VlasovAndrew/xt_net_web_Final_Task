@@ -10,5 +10,7 @@ namespace Epam.FinalTask.BLL.Interfaces
     public interface IMessageBL
     {
         Message GetById(int messageID);
+        void Delete(int messageID);
+        void Update(Message message);
     }
 }

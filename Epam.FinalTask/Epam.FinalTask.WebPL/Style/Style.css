@@ -10,12 +10,7 @@ textarea {
     display: none;
 }
 
-.channel:hover {
-    background: #DCDCDC;
-    cursor: pointer;
-}
-
-.user-row:hover {
+.channel:hover, .user-row:hover, .message-row:hover {
     background: #DCDCDC;
     cursor: pointer;
 }

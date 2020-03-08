@@ -102,17 +102,24 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
-                <h5>Соседи</h5>
+            <div class="col-12 mb-2">
+                <h5> Соседи </h5>
+                @if (neighbours.Count() == 0) { 
+                    <div class="text-center text-muted">
+                        К сожалению мы не нашли Ваших соседей.
+                    </div>
+                }
+
+                @foreach (var neighbour in neighbours)
+                {
+                    <div class="user-row col-5" onclick="window.location.href = '../user/profile?id=@neighbour.ID';">
+                        @neighbour.Name @neighbour.Surname
+                    </div>
+                }
             </div>
         </div>
 
-        @foreach (var neighbour in neighbours)
-        {
-            <div>
-                @neighbour.Name @neighbour.Surname
-            </div>
-        }
+        
         @if (User.IsInRole("admin"))
         {
             <div class="row">

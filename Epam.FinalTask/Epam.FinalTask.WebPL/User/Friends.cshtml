@@ -42,7 +42,7 @@
 
      @foreach (var friend in friends)
      {
-    <div class="row my-2">
+    <div class="row my-2 user-row mx-1" onclick="window.location.href = '../user/profile?id=@friend.ID';">
         <div class="col-4">
             <img src="@UserRequests.MakeImageString(friend.Avatar)" alt="фото" class="img-thumbnail">
         </div>
@@ -54,7 +54,7 @@
                День рождения:  @friend.Birthday.ToString("dd/MM/yyyy")
             </div>
             <div>
-                @friend.City
+                @friend.City, @friend.Street, д. @friend.HouseNumber
             </div>
         </div>
     </div>

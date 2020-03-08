@@ -35,14 +35,15 @@
     }
 }
 
+<section id="message-wall" class="col-lg-7 col-sm-5 col-md-5 bg-white mt-2 h-25 rounded">
+    <input type="hidden" value="@channel.ID" id="channel-id" />
+    <div class="my-2">
+        <h4> Сообщения </h4>
+    </div>
+</section>
+
 @if (!User.IsInRole("admin"))
 {
-    <section id="message-wall" class="col-lg-7 col-sm-5 col-md-5 bg-white mt-2 h-25 rounded">
-        <input type="hidden" value="@channel.ID" id="channel-id" />
-        <div>
-            <h4> Сообщения </h4>
-        </div>
-    </section>
 
     <div class="col-lg-2  col-sm-3 ml-2 bg-white mt-2 pt-2 h-25 rounded">
         <div class="text-center">
@@ -53,21 +54,17 @@
                 <textarea class="w-100" rows="10" id="message-field"></textarea>
                 <div class="invalid-feedback"></div>
             </div>
-            
+
             <button class="btn btn-primary my-2" id="send-btn"> Отправить </button>
         </div>
     </div>
     <script src="~/Scripts/ProjectScripts/Validation.js"></script>
     <script src="~/Scripts/ProjectScripts/GetMessages.js"></script>
-    <script src="~/Scripts/ProjectScripts/_SendMessage.js"></script>
+    <script src="~/Scripts/ProjectScripts/SendMessage.js"></script>
 }
-else 
-{ 
-    <section id="message-wall" class="col-lg-7 col-mg-7 col-md-7 bg-white mt-2 h-25 rounded">
-        <input type="hidden" value="@channel.ID" id="channel-id" />
-        <div>
-            <h4> Сообщения </h4>
-        </div>
-    </section>
+else
+{
+    <script src="~/Scripts/ProjectScripts/GetMessages.js"></script>
+}
 
-}
+

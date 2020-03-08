@@ -126,6 +126,8 @@ namespace Epam.FinalTask.BLL
 
         public void Delete(int userID)
         {
+            User user = _userDao.GetById(userID);
+            DeleteImage(user.ImagePath);
             _userDao.DeleteById(userID);
         }
 

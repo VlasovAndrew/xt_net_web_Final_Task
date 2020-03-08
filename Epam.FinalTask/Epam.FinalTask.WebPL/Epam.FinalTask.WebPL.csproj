@@ -137,6 +137,7 @@
     <Content Include="Error.cshtml" />
     <Content Include="Layouts\_AdminLayout.cshtml" />
     <Content Include="Actions\DeleteUser.cshtml" />
+    <Content Include="Messages\Edit.cshtml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -157,7 +158,7 @@
     <Content Include="Scripts\ProjectScripts\Validation.js" />
     <Content Include="Scripts\ProjectScripts\_MessageFriendBtn.js" />
     <Content Include="Scripts\ProjectScripts\GoToMessages.js" />
-    <Content Include="Scripts\ProjectScripts\_SendMessage.js" />
+    <Content Include="Scripts\ProjectScripts\SendMessage.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
     <Content Include="Scripts\src\methods\destroy.js" />

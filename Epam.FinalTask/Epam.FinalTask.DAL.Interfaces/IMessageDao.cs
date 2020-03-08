@@ -11,6 +11,6 @@ namespace Epam.FinalTask.DAL.Interfaces
     {
         Message GetById(int id);
         void Delete(int Id);
-        Message Edit(Message message);
+        void Edit(Message message);
     }
 }

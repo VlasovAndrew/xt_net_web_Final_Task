@@ -25,13 +25,18 @@
         fastAccessUsers.Add(user.ID, user);
     }
 
-    var response = messages.Select(ms => new {
+    var formattedMessages = messages.Select(ms => new {
+        ID = ms.ID,
         UserName = fastAccessUsers[ms.UserID].Name,
         UserSurname = fastAccessUsers[ms.UserID].Surname,
-        UserImage = fastAccessUsers[ms.UserID].Avatar,
         Text = ms.Text,
         SendingTime = ms.SendingTime,
     });
+
+    var response = new { 
+        role = User.IsInRole("admin"),
+        messages = formattedMessages,
+    };
 
     Response.Write(JsonConvert.SerializeObject(response));
 }

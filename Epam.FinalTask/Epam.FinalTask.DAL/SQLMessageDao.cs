@@ -18,14 +18,29 @@ namespace Epam.FinalTask.DAL
         {
             _connectionString = ConfigurationManager.ConnectionStrings["SocialHouseNetwork"].ConnectionString;
         }
-        public void Delete(int Id)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString)) {
+                using (SqlCommand command = new SqlCommand("DeleteMessage", connection)) {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.Add("@messageID", System.Data.SqlDbType.Int).Value = id;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
-        public Message Edit(Message message)
+        public void Edit(Message message)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString)) {
+                using (SqlCommand command = new SqlCommand("UpdateMessageText", connection)) {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.Add("@messageID", System.Data.SqlDbType.Int).Value = message.ID;
+                    command.Parameters.Add("@text", System.Data.SqlDbType.NVarChar).Value = message.Text;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public Message GetById(int id)

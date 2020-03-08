@@ -9,12 +9,12 @@ let readMessages = (data) => {
     for (let i = lastMessageIndex; i < responeseLength; i++) {
         let messageRow = document.createElement('div');
         messageRow.classList.add("my-2");
+        messageRow.classList.add('message-row');
         let userCaption = document.createElement('span');
         let messageDate = new Date(response[i].SendingTime);
 
-
         userCaption.innerHTML = `От ${response[i].UserName}  
-            ${response[i].UserSurname} 
+            ${response[i].UserSurname}
             ${messageDate.toLocaleTimeString()}
             ${ messageDate.toLocaleDateString()}`;
 
@@ -23,6 +23,10 @@ let readMessages = (data) => {
 
         messageRow.appendChild(userCaption);
         messageRow.appendChild(messageText);
+        
+        messageRow.onclick = () => {
+            window.location.href = '../messages/edit?id=' + response[i].ID; 
+        };
 
         messageWall.appendChild(messageRow);
     }
@@ -35,4 +39,5 @@ let getMessages = () => {
     $.get('/actions/GetMessages?id=' + channelID, readMessages);
 }
 
+getMessages();
 setInterval(getMessages, 500);

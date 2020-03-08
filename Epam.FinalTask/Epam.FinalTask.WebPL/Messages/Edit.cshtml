@@ -1,0 +1,64 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Entities;
+@using Epam.FinalTask.Ioc;
+@{
+    Layout = "~/Layouts/_AdminLayout.cshtml";
+
+    Message message;
+    UserDTO user;
+    
+    IMessageBL messageBL = DependencyResolver.MessageBL;
+    IUserBL userBL = DependencyResolver.UserBL;
+    if (!IsPost)
+    {
+        if (!int.TryParse(Request.QueryString["id"], out var messageID))
+        {
+            Response.Redirect("~/error");
+        }
+
+        try
+        {
+            message = messageBL.GetById(messageID);
+        }
+        catch (ArgumentException)
+        {
+            Response.Redirect("~/error");
+            return;
+        }
+
+        user = userBL.GetById(message.UserID);
+        <section id="message-wall" class="col-lg-7 col-sm-5 col-md-5 bg-white mt-2 h-25 rounded">
+            <form method="post">
+                <input type="hidden" value="@message.ID" name="messageID" />
+                <span> @user.Name @user.Surname </span>
+                <textarea class="w-100" name="text" rows="3" id="message-field">@message.Text</textarea>
+                <div class="mb-2">
+                    <input type="submit" class="btn btn-primary" value="Изменить" name="change" />
+                    <input type="submit" class="btn btn-primary" value="Удалить" name="delete" />
+                </div>
+            </form>
+        </section>
+    }
+    else
+    {
+        if (!int.TryParse(Request.Form["messageID"], out var messageID)) {
+            Response.Redirect("~");
+            return;
+        }
+        if (Request.Form["change"] != null)
+        {
+            Message updatingMessage = new Message() { 
+                ID = messageID, 
+                Text = Request.Form["text"],
+            };
+            messageBL.Update(updatingMessage);
+        }
+        else if (Request.Form["delete"] != null)
+        {
+
+            messageBL.Delete(messageID);
+        }
+        Response.Redirect("~");
+    }
+}
+

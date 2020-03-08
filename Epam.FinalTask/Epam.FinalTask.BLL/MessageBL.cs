@@ -16,9 +16,20 @@ namespace Epam.FinalTask.BLL
         {
             _messageDao = messageDao;
         }
+
+        public void Delete(int messageID)
+        {
+            _messageDao.Delete(messageID);
+        }
+
         public Message GetById(int messageID)
         {
             return _messageDao.GetById(messageID);
+        }
+
+        public void Update(Message message)
+        {
+            _messageDao.Edit(message);
         }
     }
 }

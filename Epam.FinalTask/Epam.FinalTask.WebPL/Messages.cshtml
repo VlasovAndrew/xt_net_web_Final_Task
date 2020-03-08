@@ -13,8 +13,6 @@
         Layout = "~/Layouts/_Layout.cshtml";
     }
     
-
-
     if (!int.TryParse(Request["id"], out var userID)) {
         Response.Redirect("~/error");
         return;
