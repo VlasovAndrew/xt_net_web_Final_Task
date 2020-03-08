@@ -2,14 +2,23 @@
 @using Epam.FinalTask.Ioc;
 @using Epam.FinalTask.Entities;
 @{
-    Layout = "~/Layouts/_Layout.cshtml";
+    if (User.IsInRole("admin"))
+    {
+        Layout = "~/Layouts/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Layouts/_Layout.cshtml";
+    }
 
-    if (IsPost) {
+    if (IsPost)
+    {
         Response.Redirect("~/error");
         return;
     }
 
-    if (!int.TryParse(Request.QueryString["id"], out var channelID)) {
+    if (!int.TryParse(Request.QueryString["id"], out var channelID))
+    {
         Response.Redirect("~/error");
         return;
     }
@@ -26,21 +35,39 @@
     }
 }
 
-<section id="message-wall" class="col-lg-7 col-mg-7 col-md-7 bg-white mt-2 h-25 rounded">
-    <input type="hidden" value="@channel.ID" id="channel-id" />
-    <div>
-        <h4> Сообщения </h4> 
-    </div>
-</section>
+@if (!User.IsInRole("admin"))
+{
+    <section id="message-wall" class="col-lg-7 col-sm-5 col-md-5 bg-white mt-2 h-25 rounded">
+        <input type="hidden" value="@channel.ID" id="channel-id" />
+        <div>
+            <h4> Сообщения </h4>
+        </div>
+    </section>
 
-<div class="col-lg-2 col-mg-3 col-sm-3 col- ml-2 bg-white mt-2 pt-2 h-25 rounded">
-    <div class="text-center">
-        <h5> Написать сообщение </h5>
+    <div class="col-lg-2  col-sm-3 ml-2 bg-white mt-2 pt-2 h-25 rounded">
+        <div class="text-center">
+            <h5> Написать сообщение </h5>
+        </div>
+        <div class="form-row" id="message-input-area">
+            <div class="form-group">
+                <textarea class="w-100" rows="10" id="message-field"></textarea>
+                <div class="invalid-feedback"></div>
+            </div>
+            
+            <button class="btn btn-primary my-2" id="send-btn"> Отправить </button>
+        </div>
     </div>
-    <div>
-        <textarea class="w-100" rows="10" id="message-field"></textarea>
-        <button class="btn btn-primary my-2" id="send-btn"> Отправить </button>
-    </div>
-</div>
-<script src="~/Scripts/ProjectScripts/_SendMessage.js"></script>
-<script src="~/Scripts/ProjectScripts/GetMessages.js"></script>
+    <script src="~/Scripts/ProjectScripts/Validation.js"></script>
+    <script src="~/Scripts/ProjectScripts/GetMessages.js"></script>
+    <script src="~/Scripts/ProjectScripts/_SendMessage.js"></script>
+}
+else 
+{ 
+    <section id="message-wall" class="col-lg-7 col-mg-7 col-md-7 bg-white mt-2 h-25 rounded">
+        <input type="hidden" value="@channel.ID" id="channel-id" />
+        <div>
+            <h4> Сообщения </h4>
+        </div>
+    </section>
+
+}

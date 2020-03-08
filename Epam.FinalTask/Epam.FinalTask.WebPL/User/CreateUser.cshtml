@@ -22,14 +22,14 @@
     {
         errorMessage = user.Item1;
     }
-    if (errorMessage != null) 
-    { 
+    if (errorMessage == null)
+    {
         UserRequests.CreateAccountWithUser(account.Item2, user.Item2);
 
         LoginRequests.SignIn(login, password);
         Response.Redirect("~");
     }
-    
+
 }
 
 <div class="row justify-content-center">
@@ -42,94 +42,8 @@
                 @RenderPage("~/Shared/_AccountForm.cshtml")
             </div>
 
-            
-
             <div class="tab">
-                <div class="text-center mb-2">
-                    <img class="img-thumbnail hidden-image" id="user-image" alt="Фото" />
-                </div>
-
-                <div class="form-row">
-                    <label class="btn btn-primary">
-                        Выберите фото <input type="file" name="Image" id="user-image-input" hidden />
-                    </label>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-6" id="name-input">
-                        <label for="inputName">Имя</label>
-                        <input type="text" class="form-control" name="name"
-                               id="inputName" placeholder="Имя" />
-                        <div class="invalid-feedback">
-
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6" id="lastname-input">
-                        <label for="inputSurname">Фамилия</label>
-                        <input type="text" class="form-control" name="surname"
-                               id="inputSurname" placeholder="Фамилия" />
-                        <div class="invalid-feedback">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-12" id="date-row">
-                        <label for="inputBirthday">Дата рождения</label>
-                        <input type="date" class="form-control"
-                               id="inputBirthday"
-                               name="birthday" />
-                        <div class="invalid-feedback">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-12" id="city-row">
-                        <label for="inputAddress">Город</label>
-                        <input type="text" class="form-control"
-                               id="inputCity" placeholder="Город"
-                               name="city" required />
-                        <div class="invalid-feedback">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-12" id="street-row">
-                        <label for="inputAddress">Улица</label>
-                        <input type="text" class="form-control"
-                               id="inputStreet"
-                               placeholder="Улица"
-                               name="street" required />
-                        <div class="invalid-feedback">
-                            Пожалуйста введите Вашу улицу.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-6" id="house-row">
-                        <label for="inputHouseNumber">Дом</label>
-                        <input type="number" class="form-control"
-                               id="inputHouse"
-                               placeholder="Дом"
-                               name="house" required />
-                        <div class="invalid-feedback">
-                            Пожалуйста введите номер Вашего дома.
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputApartmentNumber">Квартира</label>
-                        <input type="text" class="form-control"
-                               id="inputApartmentNumber"
-                               placeholder="Квартира"
-                               name="apartment" />
-                    </div>
-                </div>
+                @RenderPage("~/Shared/_UserForm.cshtml")
             </div>
             @if (errorMessage != null)
             {
@@ -149,4 +63,5 @@
 </div>
 
 <script src="~/Scripts/ProjectScripts/AttachImage.js"></script>
+<script src="~/Scripts/ProjectScripts/Validation.js"></script>
 <script src="~/Scripts/ProjectScripts/ScrollUserForm.js"></script>

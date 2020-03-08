@@ -10,6 +10,9 @@ namespace Epam.FinalTask.Entities
 {
     public class UserDTO : AbstractUser
     {
+        public UserDTO() {
+            Avatar = new byte[] { };
+        }
         public byte[] Avatar { get; set; }
     }
 }

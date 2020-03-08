@@ -39,7 +39,14 @@ namespace Epam.FinalTask.RoleProviders
                 }
             }
         }
-#region NOT_IMPLEMENTED
+
+        public override string[] GetRolesForUser(string username)
+        {
+            return _roleDao.GetAllRoles(username).ToArray();
+        }
+
+
+        #region NOT_IMPLEMENTED
         public override string ApplicationName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override void CreateRole(string roleName)
@@ -61,12 +68,6 @@ namespace Epam.FinalTask.RoleProviders
         {
             throw new NotImplementedException();
         }
-
-        public override string[] GetRolesForUser(string username)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string[] GetUsersInRole(string roleName)
         {
             throw new NotImplementedException();

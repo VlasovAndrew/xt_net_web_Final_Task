@@ -4,23 +4,38 @@
 @using Epam.FinalTask.Ioc;
 @{
     Layout = "~/Layouts/_AdminLayout.cshtml";
-    if (IsPost) { 
+    string errorMessage = null;
+    if (IsPost)
+    {
         string login = Request.Form["login"];
         string password = Request.Form["password"];
         Tuple<string, Account> account = UserRequests.CreateAccount(login, password);
-        IAccountBL accountBL = DependencyResolver.AccountBL;
-        accountBL.Add(account.Item2);
-        RoleProvider roleProvider = Roles.Provider;
-        roleProvider.AddUsersToRoles(new string[] { login }, new string[] { "admin" });
-        Response.Redirect("~");
+        errorMessage = account.Item1;
+        if (errorMessage == null)
+        {
+            IAccountBL accountBL = DependencyResolver.AccountBL;
+            accountBL.Add(account.Item2);
+            RoleProvider roleProvider = Roles.Provider;
+            roleProvider.AddUsersToRoles(new string[] { login }, new string[] { "admin" });
+            Response.Redirect("~");
+        }
     }
 }
-   
-        <div class="col-3 mt-2 bg-white rounded p-3">
-            <!-- Form -->
-            <form method="post" novalidate="" enctype="multipart/form-data" id="main-form">
-                @RenderPage("~/Shared/_AccountForm.cshtml")
-                <button type="submit" class="btn btn-primary"> Создать </button>
-            </form>
-        </div>
-    
+
+<div class="col-3 mt-2 bg-white rounded p-3">
+    <!-- Form -->
+    <form method="post" novalidate="" enctype="multipart/form-data" id="main-form">
+        @RenderPage("~/Shared/_AccountForm.cshtml")
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger">
+                @errorMessage
+
+            </div>
+        }
+        <button type="submit" class="btn btn-primary" id="create-admin"> Создать </button>
+    </form>
+</div>
+
+<script src="~/Scripts/ProjectScripts/Validation.js"></script>
+<script src="~/Scripts/ProjectScripts/AddAdminClick.js"></script>

@@ -108,16 +108,25 @@ namespace Epam.FinalTask.BLL
 
         public void Update(UserDTO userDTO)
         {
+            // Get current user entity
             User currentUser = _userDao.GetById(userDTO.ID);
+            // If user has profile image and updating entity has image, then delete old image
             if (currentUser.ImagePath != null && userDTO.Avatar != null)
             {
                 DeleteImage(currentUser.ImagePath);
-            }   
+            }
+            // Create new user entity from updating userDTO
             User updatedUser = CreateUser(userDTO);
-            if (currentUser.ImagePath != null) {
+            // If user has image and userDTO doesn't  have image then strore old profile image
+            if (currentUser.ImagePath != null && userDTO.Avatar == null) {
                 updatedUser.ImagePath = currentUser.ImagePath;
             }
             _userDao.Update(updatedUser);
+        }
+
+        public void Delete(int userID)
+        {
+            _userDao.DeleteById(userID);
         }
 
         private UserDTO CreateUserDTO(User user) 
@@ -133,7 +142,7 @@ namespace Epam.FinalTask.BLL
                 user.ImagePath = ConfigurationManager.AppSettings["defaultUserImage"];
             }
 
-            byte[] avatar = ReadImage(user.ImagePath);
+            byte[] avatar = ReadImage(user.ImagePath, user.ID);
             UserDTO userDTO = new UserDTO()
             {
                 ID = user.ID,
@@ -180,10 +189,18 @@ namespace Epam.FinalTask.BLL
             return imagePath;
         }
 
-        private byte[] ReadImage(string path)
+        private byte[] ReadImage(string path, int userID)
         {
             string hostingPath = HostingEnvironment.MapPath("~");
-            byte[] avatar = File.ReadAllBytes(Path.Combine(hostingPath, path));
+            byte[] avatar;
+            try
+            {
+                avatar = File.ReadAllBytes(Path.Combine(hostingPath, path));
+            }
+            catch (FileNotFoundException e) {
+                avatar = new byte[] { };
+                _logger.Error($"Cannot read profile image from user with id = {userID}", e);
+            }
             return avatar;
         }
 
@@ -198,6 +215,5 @@ namespace Epam.FinalTask.BLL
             if (birthday.Date > today.AddYears(-age)) age--;
             return age;
         }
-
     }
 }

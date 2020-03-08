@@ -1,0 +1,19 @@
+﻿@using Epam.FinalTask.BLL.Interfaces;
+@using Epam.FinalTask.Ioc;
+@{
+    Layout = null;
+    if (!User.IsInRole("admin") || IsPost) {
+        Response.StatusCode = 404;
+        return;
+    }
+
+    if (!int.TryParse(Request.QueryString["id"], out var userID)) {
+        Response.StatusCode = 404;
+        return;
+    }
+
+    IUserBL userBL = DependencyResolver.UserBL;
+    userBL.Delete(userID);
+
+}
+

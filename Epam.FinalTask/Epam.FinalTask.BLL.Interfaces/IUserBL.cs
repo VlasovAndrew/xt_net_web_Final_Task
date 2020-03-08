@@ -16,5 +16,6 @@ namespace Epam.FinalTask.BLL.Interfaces
         void RemoveFriend(int userID, int friendID);
         IEnumerable<UserDTO> Search(Dictionary<string, string> searchParams);
         void Update(UserDTO user);
+        void Delete(int userID);
     }
 }

@@ -90,7 +90,18 @@ namespace Epam.FinalTask.WebPL.Helpers
         {
             if (_accountBL.AccountExists(login)) {
                 return 
-                    new Tuple<string, Account>("Аккаунт с таким логином уже существует, пожалуйста введите другой", null);
+                    new Tuple<string, Account>("Аккаунт с таким логином уже существует, пожалуйста " +
+                                                    "выберите другой логин другой", null);
+            }
+
+            if (login == "" || login == null) 
+            {
+                return new Tuple<string, Account>("Введите логин", null);
+            }
+
+            if (password == "" || password == null)
+            {
+                return new Tuple<string, Account>("Введите пароль", null);
             }
 
             Account account = _accountBL.СreateAccount(login, password);
@@ -106,6 +117,8 @@ namespace Epam.FinalTask.WebPL.Helpers
 
         public static string MakeImageString(byte[] image)
         {
+            if (image.Length == 0)
+                return null;
             return $"data:image;base64, {Convert.ToBase64String(image)}";
         }
     }

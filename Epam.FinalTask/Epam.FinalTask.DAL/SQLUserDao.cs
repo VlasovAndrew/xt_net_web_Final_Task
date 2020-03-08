@@ -77,7 +77,15 @@ namespace Epam.FinalTask.DAL
 
         public void DeleteById(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("DeleteUser", connection)) {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = id;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public void DeleteFriend(int userID, int friendID)

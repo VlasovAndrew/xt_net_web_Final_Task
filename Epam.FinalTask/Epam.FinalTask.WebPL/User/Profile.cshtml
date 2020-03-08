@@ -3,9 +3,15 @@
 @using Epam.FinalTask.BLL.Interfaces;
 @using Epam.FinalTask.WebPL.Helpers;
 @{
-    Layout = "~/Layouts/_Layout.cshtml";
+    if (User.IsInRole("admin"))
+    {
+        Layout = "~/Layouts/_AdminLayout.cshtml";
+    }
+    else {
+        Layout = "~/Layouts/_Layout.cshtml";
+    }
 
-    if (IsPost) 
+    if (IsPost)
     {
         Response.Redirect("~/error");
         return;
@@ -18,9 +24,13 @@
 
     IUserBL userBL = DependencyResolver.UserBL;
     UserDTO user;
+    IEnumerable<UserDTO> neighbours = null;
+
     try
     {
         user = userBL.GetById(id);
+        neighbours = userBL.GetAll().Where(userDTO => userDTO.HouseNumber == user.HouseNumber 
+                                                   && userDTO.ID != user.ID);
     }
     catch (ArgumentException) {
         Response.Redirect("~/error");
@@ -29,6 +39,7 @@
 }
 
     <section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
+        <input type="hidden" value="@user.ID" id="profile-id" />
         <div class="row p-2">
             <div class="col-lg-3 col-md-4">
                 <img src="@UserRequests.MakeImageString(user.Avatar)" alt="Ваша аватарка" class="img-thumbnail">
@@ -36,9 +47,9 @@
 
             <div class="col-lg-9">
 
-                <h4 class="my-0"> 
+                <h4 class="my-0">
                     <span class="text-capitalize"> @user.Name </span>
-                    <span class="text-capitalize"> @user.Surname </span> 
+                    <span class="text-capitalize"> @user.Surname </span>
                 </h4>
                 <div class="row">
                     <div class="col-4">
@@ -57,9 +68,9 @@
                         <div class="mt-2">
                             Дом:
                         </div>
-                        
+
                         @if (user.ApartmentNumber != 0)
-                        { 
+                        {
                             <div class="mt-2">
                                 Квартира:
                             </div>
@@ -81,7 +92,7 @@
                         </div>
 
                         @if (user.ApartmentNumber != 0)
-                        { 
+                        {
                             <div class="mt-2">
                                 @user.ApartmentNumber
                             </div>
@@ -95,4 +106,30 @@
                 <h5>Соседи</h5>
             </div>
         </div>
+
+        @foreach (var neighbour in neighbours)
+        {
+            <div>
+                @neighbour.Name @neighbour.Surname
+            </div>
+        }
+        @if (User.IsInRole("admin"))
+        {
+            <div class="row">
+                <div class="col mb-3">
+                    <button class="btn btn-primary" id="message-btn">
+                        Сообщения
+                    </button>
+                    <button class="btn btn-primary" id="edit-btn">
+                        Редактировать
+                    </button>
+                    <button class="btn btn-primary" id="delete-btn">
+                        Удалить
+                    </button>
+                </div>
+            </div>
+
+            <script src="~/Scripts/ProjectScripts/ChangeUser.js"></script>
+        }
+
     </section>

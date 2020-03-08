@@ -136,6 +136,7 @@
     <Content Include="Actions\CheckAccount.cshtml" />
     <Content Include="Error.cshtml" />
     <Content Include="Layouts\_AdminLayout.cshtml" />
+    <Content Include="Actions\DeleteUser.cshtml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -145,12 +146,16 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\ProjectScripts\AddAdminClick.js" />
     <Content Include="Scripts\ProjectScripts\AttachImage.js" />
+    <Content Include="Scripts\ProjectScripts\ChangeClick.js" />
+    <Content Include="Scripts\ProjectScripts\ChangeUser.js" />
     <Content Include="Scripts\ProjectScripts\ScrollUserForm.js" />
     <Content Include="Scripts\ProjectScripts\Seach.js" />
-    <Content Include="Scripts\ProjectScripts\Validation.js" />
+    <Content Include="Scripts\ProjectScripts\LoginValidation.js" />
     <Content Include="Scripts\ProjectScripts\GetMessages.js" />
-    <Content Include="Scripts\ProjectScripts\MessageFriendBtn.js" />
+    <Content Include="Scripts\ProjectScripts\Validation.js" />
+    <Content Include="Scripts\ProjectScripts\_MessageFriendBtn.js" />
     <Content Include="Scripts\ProjectScripts\GoToMessages.js" />
     <Content Include="Scripts\ProjectScripts\_SendMessage.js" />
     <Content Include="Scripts\src\index.js" />
@@ -251,6 +256,7 @@
     <Content Include="AddAdmin.cshtml" />
     <Content Include="Shared\_Head.cshtml" />
     <Content Include="Shared\_AccountForm.cshtml" />
+    <Content Include="Shared\_UserForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

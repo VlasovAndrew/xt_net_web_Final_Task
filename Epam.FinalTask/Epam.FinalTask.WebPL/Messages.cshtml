@@ -3,7 +3,16 @@
 @using Epam.FinalTask.Entities;
 @using Epam.FinalTask.WebPL.Helpers;
 @{
-    Layout = "~/Layouts/_Layout.cshtml";
+
+    if (User.IsInRole("admin"))
+    {
+        Layout = "~/Layouts/_AdminLayout.cshtml";
+    }
+    else 
+    { 
+        Layout = "~/Layouts/_Layout.cshtml";
+    }
+    
 
 
     if (!int.TryParse(Request["id"], out var userID)) {
@@ -13,7 +22,7 @@
 
     IAccountBL accountBL = DependencyResolver.AccountBL;
     int authorizedUser = accountBL.GetUserIDByLogin(User.Identity.Name);
-    if (userID != authorizedUser)
+    if (userID != authorizedUser && !User.IsInRole("admin"))
     {
         Response.Redirect("~");
     }
@@ -36,7 +45,7 @@
 
     @if (channelsWithUsers.Count() == 0) { 
         <div>
-            У вас пока нет сообщений.
+            Здесь пока нет сообщений.
         </div>
     }
 
@@ -46,7 +55,7 @@
             <input type="hidden" value="@channel.Item1.ID" />
             <h5> @channel.Item1.Title </h5>
             
-            <div> Ваша переписка с @string.Join(", ", channel.Item2.Select(user => $"{user.Name} {user.Surname}")) </div>
+            <div> Переписка с @string.Join(", ", channel.Item2.Select(user => $"{user.Name} {user.Surname}")) </div>
         </div>
     }
 </section>

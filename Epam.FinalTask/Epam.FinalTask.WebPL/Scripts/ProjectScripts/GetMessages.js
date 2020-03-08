@@ -33,7 +33,6 @@ let readMessages = (data) => {
 
 let getMessages = () => {
     $.get('/actions/GetMessages?id=' + channelID, readMessages);
-    console.log("hello");
 }
 
 setInterval(getMessages, 500);
