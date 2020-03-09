@@ -52,6 +52,14 @@ namespace Epam.FinalTask.WebPL.Helpers
                 return new Tuple<string, UserDTO>("Введите корректную дату", null);
             }
 
+            if (birthday > DateTime.Today) {
+                return new Tuple<string, UserDTO>("Дата рождения не может быть больше сегднешней даты", null);
+            }
+
+            if (birthday.Year <= 1900) {
+                return new Tuple<string, UserDTO>("Похоже, что Вы ввели неверный год рождения", null);
+            }
+
             if (cityParam == null || cityParam == "") {
                 return new Tuple<string, UserDTO>("Введите город", null);
             }
@@ -69,7 +77,7 @@ namespace Epam.FinalTask.WebPL.Helpers
             {
                 if (!int.TryParse(apartmentParam, out var apartmentNumber) 
                     || apartmentNumber <= 0
-                    || apartmentNumber >= 1000) {
+                    || apartmentNumber >= 500) {
                     return new Tuple<string, UserDTO>("Введите корректный номер квартиры", null);
                 }
                 userDTO.ApartmentNumber = apartmentNumber;
@@ -102,6 +110,10 @@ namespace Epam.FinalTask.WebPL.Helpers
             if (password == "" || password == null)
             {
                 return new Tuple<string, Account>("Введите пароль", null);
+            }
+
+            if (password.Length < 5 || password.Length > 10) {
+                return new Tuple<string, Account>("Пароль должен быть длиной от 5 до 10 символов", null);
             }
 
             Account account = _accountBL.СreateAccount(login, password);

@@ -8,12 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using log4net;
+using Epam.FinalTask.ApplicationLogger;
 
 namespace Epam.FinalTask.DAL
 {
     public class SQLUserDao : IUserDao
     {
         private string _connectionString;
+        private ILog _logger = Logger.Log;
         public SQLUserDao()
         {
             _connectionString = ConfigurationManager
@@ -35,6 +38,7 @@ namespace Epam.FinalTask.DAL
                     
                     int userID = (int)command.Parameters["@userID"].Value;
                     user.ID = userID;
+                    _logger.Info($"Adding user with id = {userID}");
                     return user;
                 }
             }
@@ -49,6 +53,7 @@ namespace Epam.FinalTask.DAL
             }
             catch (ArgumentException) 
             {
+                _logger.Error($"Cannot read user with id = {userID} for adding friend");
                 throw;   
             }
 

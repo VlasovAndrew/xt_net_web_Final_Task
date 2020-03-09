@@ -3,7 +3,14 @@
 @using Epam.FinalTask.Ioc;
 @using Epam.FinalTask.WebPL.Helpers;
 @{
-    Layout = "~/Layouts/_Layout.cshtml";
+    if (User.IsInRole("admin"))
+    {
+        Layout = "~/Layouts/_AdminLayout.cshtml";
+    }
+    else {
+        Layout = "~/Layouts/_Layout.cshtml";
+    }
+    
 
     if (!int.TryParse(Request.QueryString["ID"], out var userID)) {
         Response.Redirect("~/error");
@@ -28,17 +35,21 @@
         {
             friends.Add(userBL.GetById(id));
         }
-        catch (ArgumentException) 
+        catch (ArgumentException)
         {
             continue;
         }
     }
 }
-<section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
+<section class="col-md-8 col-lg-8 mt-2 bg-white h-25 rounded">
     <div class="mt-2">
         <h4> Друзья </h4>
     </div>
-    
+    @if (friends.Count == 0) { 
+        <div class="text-center text-muted mb-2">
+            Здесь пока нет друзей.
+        </div>
+    }
 
      @foreach (var friend in friends)
      {

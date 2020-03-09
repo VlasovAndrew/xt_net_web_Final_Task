@@ -11,18 +11,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Hosting;
-using Epam.FinalTask.Logger;
+using Epam.FinalTask.ApplicationLogger;
 
 namespace Epam.FinalTask.BLL
 {
     public class UserBL : IUserBL
     {
         private IUserDao _userDao;
-        private ILog _logger = Logger.Logger.Log;
-        public UserBL(IUserDao userDao) 
+        private ILog _logger = Logger.Log;
+        public UserBL(IUserDao userDao)
         {
             _userDao = userDao;
         }
+        
+        // Creates new user 
         public UserDTO Add(UserDTO userDTO)
         {
             User user = CreateUser(userDTO);
@@ -30,12 +32,19 @@ namespace Epam.FinalTask.BLL
             userDTO.ID = user.ID;
             return userDTO;
         }
-
+        // Add friend to user
         public void AddFriend(int userID, int friendID)
         {
-            _userDao.AddFriend(userID, friendID);
+            try
+            {
+                _userDao.AddFriend(userID, friendID);
+            }
+            catch (ArgumentException e) {
+                _logger.Error($"Adding friend error userID = {userID} friendID = {friendID}", e);
+                return;
+            }
         }
-
+        // Gets all users
         public IEnumerable<UserDTO> GetAll()
         {
             List<UserDTO> res = new List<UserDTO>();
@@ -46,10 +55,10 @@ namespace Epam.FinalTask.BLL
             }
             return res;
         }
-
+        // Getting user by id
+        // if user doesn't exist throws Argument exeption
         public UserDTO GetById(int id)
         {
-            _logger.Info($"Getting user with id = {id}");
             User user;
             try {
                 user = _userDao.GetById(id);
@@ -59,15 +68,28 @@ namespace Epam.FinalTask.BLL
                 _logger.Error(e.Message, e);
                 throw;
             }
-            
+
             return CreateUserDTO(user);
         }
-
+        // Remove friend from user
         public void RemoveFriend(int userID, int friendID)
         {
-            _userDao.DeleteFriend(userID, friendID);
+            try
+            {
+                _userDao.DeleteFriend(userID, friendID);
+            }
+            catch (ArgumentException e)
+            {
+                _logger.Error($"Cannot delete friend with id = {friendID} from user with id = {userID}", e);
+            }
         }
-
+        /// <summary>
+        /// Gets users, which satisfy of given parametr
+        /// </summary>
+        /// <param name="searchParams">Dictionary with search parametrs 
+        /// code use the following keys: name, surname, city, house, lowerAgeBound and upperAgeBound
+        /// </param>
+        /// <returns> Collection on users. </returns>
         public IEnumerable<UserDTO> Search(Dictionary<string, string> searchParams)
         {
             IEnumerable<UserDTO> users = GetAll();
@@ -89,7 +111,7 @@ namespace Epam.FinalTask.BLL
 
             searchParams.TryGetValue("house", out var searchHouse);
             if (searchHouse != null && searchHouse != "") {
-                users = users.Where(user => user.HouseNumber == searchHouse);
+                users = users.Where(user => user.HouseNumber.ToLower() == searchHouse.ToLower());
             }
 
             DateTime today = DateTime.Today;
@@ -105,11 +127,18 @@ namespace Epam.FinalTask.BLL
 
             return users;
         }
-
         public void Update(UserDTO userDTO)
         {
             // Get current user entity
-            User currentUser = _userDao.GetById(userDTO.ID);
+            User currentUser;
+            try
+            {
+                currentUser = _userDao.GetById(userDTO.ID);
+            }
+            catch (ArgumentException e) {
+                _logger.Error($"Cannot update user with id = {userDTO.ID}");
+                return;
+            }
             // If user has profile image and updating entity has image, then delete old image
             if (currentUser.ImagePath != null && userDTO.Avatar != null)
             {
@@ -126,12 +155,21 @@ namespace Epam.FinalTask.BLL
 
         public void Delete(int userID)
         {
-            User user = _userDao.GetById(userID);
+            User user;
+            try
+            {
+                user = _userDao.GetById(userID);
+            }
+            catch (ArgumentException e) {
+                _logger.Error($"Cannot delete user with id = {userID}", e);
+                return;
+            }
+            
             DeleteImage(user.ImagePath);
             _userDao.DeleteById(userID);
         }
 
-        private UserDTO CreateUserDTO(User user) 
+        private UserDTO CreateUserDTO(User user)
         {
             List<User> friends = new List<User>();
             foreach (var friendId in user.Friends)
@@ -143,7 +181,6 @@ namespace Epam.FinalTask.BLL
             {
                 user.ImagePath = ConfigurationManager.AppSettings["defaultUserImage"];
             }
-
             byte[] avatar = ReadImage(user.ImagePath, user.ID);
             UserDTO userDTO = new UserDTO()
             {
@@ -160,7 +197,7 @@ namespace Epam.FinalTask.BLL
             };
             return userDTO;
         }
-        private User CreateUser(UserDTO userDTO) 
+        private User CreateUser(UserDTO userDTO)
         {
             User user = new User()
             {
@@ -206,10 +243,17 @@ namespace Epam.FinalTask.BLL
             return avatar;
         }
 
-        private void DeleteImage(string path) 
+        private void DeleteImage(string path)
         {
             string hostingPath = HostingEnvironment.MapPath("~");
-            File.Delete(Path.Combine(hostingPath, path));
+            try
+            {
+                File.Delete(Path.Combine(hostingPath, path));
+            }
+            catch (FileNotFoundException e) {
+                _logger.Error($"Cannot delete image by path = {path}", e);
+                return;
+            }
         }
 
         private int CalculateAge(DateTime birthday, DateTime today) {

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\Epam.FinalTask.WebPL\Bin\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -75,6 +78,10 @@
     <ProjectReference Include="..\Epam.FinalTask.DAL.Interfaces\Epam.FinalTask.DAL.Interfaces.csproj">
       <Project>{80bb7b8c-eb9f-47c1-9a85-3ec9de550a83}</Project>
       <Name>Epam.FinalTask.DAL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Epam.FinalTask.Logger\Epam.FinalTask.Logger.csproj">
+      <Project>{196A4133-EC1E-41D5-8BA9-C016C1FE2EEE}</Project>
+      <Name>Epam.FinalTask.Logger</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

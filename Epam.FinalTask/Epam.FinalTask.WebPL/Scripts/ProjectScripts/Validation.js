@@ -35,12 +35,16 @@ let validateUserData = (callback) => {
 
     let dateRow = document.getElementById('date-row');
     let dateInput = dateRow.querySelector('input');
+    
     if (dateInput.value == '') {
-        makeInvalidInput(dateRow, dateInput, 'Пожалуйста введите дату рождения.');
+        makeInvalidInput(dateRow, dateInput, 'Пожалуйста введите корректную дату рождения.');
         return;
     }
-    console.log(dateInput.value);
-
+    let birthday = new Date(dateInput.value);
+    if (birthday.getFullYear() < 1900) {
+        makeInvalidInput(dateRow, dateInput, 'Пожалуйста введите корректную дату рождения.');
+        return;
+    }
 
     let cityRow = document.getElementById('city-row');
     let cityInput = cityRow.querySelector('input');
@@ -62,9 +66,23 @@ let validateUserData = (callback) => {
         makeInvalidInput(houseRow, houseInput, 'Пожалуйста введите Ваш дом.');
         return;
     }
-    callback();
-}
 
+    $.get('/actions/checkaddress', {
+        city: cityInput.value,
+        street: streetInput.value,
+        house: houseInput.value,
+    },
+    (data) => {
+        let response = JSON.parse(data);
+        if (response.exists) {
+            callback();
+        }
+        else {
+            makeInvalidInput(cityRow, cityInput, 'Адрес не найден, пожалуйста проверьте введенные данные');
+            return;
+        }
+    });
+}
 
 let validateAccountData = (callback) => {
     let loginRegex = /^[\w]{5,20}$/g;
@@ -78,7 +96,8 @@ let validateAccountData = (callback) => {
     }
 
     if (!loginRegex.test(loginInput.value)) {
-        makeInvalidInput(loginRow, loginInput, 'Логин может содержать только буквы, цифры и знак подчеркивания, длина от 5 до 20 символов');
+        makeInvalidInput(loginRow, loginInput, 'Логин может содержать только английские буквы, ' +
+            'цифры и знак подчеркивания, длина от 5 до 20 символов');
         return;
     }
 
@@ -86,6 +105,11 @@ let validateAccountData = (callback) => {
     let passwordInput = passwordRow.querySelector('input');
     if (passwordInput.value == "") {
         makeInvalidInput(passwordRow, passwordInput, 'Пожалуйста введите Ваш пароль.');
+        return;
+    }
+
+    if (passwordInput.value.length < 5 || passwordInput.value.length > 10) {
+        makeInvalidInput(passwordRow, passwordInput, 'Длина пароля должна быть от 5 до 10 символов');   
         return;
     }
 

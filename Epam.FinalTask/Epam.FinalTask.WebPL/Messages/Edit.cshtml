@@ -4,9 +4,14 @@
 @{
     Layout = "~/Layouts/_AdminLayout.cshtml";
 
+    if (!User.IsInRole("admin")) {
+        Response.Redirect("~/");
+        return;
+    }
+
     Message message;
     UserDTO user;
-    
+
     IMessageBL messageBL = DependencyResolver.MessageBL;
     IUserBL userBL = DependencyResolver.UserBL;
     if (!IsPost)

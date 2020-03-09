@@ -1,0 +1,17 @@
+﻿@using Newtonsoft.Json;
+@using Epam.FinalTask.WebPL.Helpers;
+@{
+    Layout = null;
+
+    string city = Request["city"];
+    string street = Request["street"];
+    string house = Request["house"];
+    bool exists = AddressChecker.CheckAddress(city, street, house);
+    var response = new
+    {
+        exists = exists,
+    };
+
+    Response.Write(JsonConvert.SerializeObject(response));
+}
+

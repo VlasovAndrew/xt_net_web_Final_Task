@@ -5,33 +5,38 @@ let lastMessageIndex = 0;
 
 let readMessages = (data) => {
     let response = JSON.parse(data);
-    let responeseLength = response.length;
-    for (let i = lastMessageIndex; i < responeseLength; i++) {
+
+    let message = response["messages"];
+    let adminStatus = response["role"];
+    let messageLength = message.length;
+
+    for (let i = lastMessageIndex; i < messageLength; i++) {
         let messageRow = document.createElement('div');
         messageRow.classList.add("my-2");
         messageRow.classList.add('message-row');
         let userCaption = document.createElement('span');
-        let messageDate = new Date(response[i].SendingTime);
 
-        userCaption.innerHTML = `От ${response[i].UserName}  
-            ${response[i].UserSurname}
+        let messageDate = new Date(message[i].SendingTime);
+        userCaption.innerHTML = `От ${message[i].UserName}  
+            ${message[i].UserSurname}
             ${messageDate.toLocaleTimeString()}
             ${ messageDate.toLocaleDateString()}`;
 
         let messageText = document.createElement('div');
-        messageText.innerHTML = `${response[i].Text}`;
+        messageText.innerHTML = `${message[i].Text}`;
 
         messageRow.appendChild(userCaption);
         messageRow.appendChild(messageText);
+        if (adminStatus) {
+            messageRow.onclick = () => {
+                window.location.href = '../messages/edit?id=' + message[i].ID;
+            };
+        }        
         
-        messageRow.onclick = () => {
-            window.location.href = '../messages/edit?id=' + response[i].ID; 
-        };
-
         messageWall.appendChild(messageRow);
     }
-    if (responeseLength > lastMessageIndex) {
-        lastMessageIndex = responeseLength;
+    if (messageLength > lastMessageIndex) {
+        lastMessageIndex = messageLength;
     }
 }
 

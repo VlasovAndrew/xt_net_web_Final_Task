@@ -23,14 +23,19 @@
     }
 
     IUserBL userBL = DependencyResolver.UserBL;
+    IAccountBL accountBL = DependencyResolver.AccountBL;
+    
     UserDTO user;
+    int loggedID;
     IEnumerable<UserDTO> neighbours = null;
-
     try
     {
         user = userBL.GetById(id);
-        neighbours = userBL.GetAll().Where(userDTO => userDTO.HouseNumber == user.HouseNumber 
+        neighbours = userBL.GetAll().Where(userDTO => userDTO.HouseNumber == user.HouseNumber
+                                                   && userDTO.City == user.City
+                                                   && userDTO.Street == user.Street
                                                    && userDTO.ID != user.ID);
+        loggedID = accountBL.GetUserIDByLogin(User.Identity.Name);
     }
     catch (ArgumentException) {
         Response.Redirect("~/error");
@@ -40,6 +45,26 @@
 
     <section class="col-md-8 col-lg-8 mt-2 bg-white rounded">
         <input type="hidden" value="@user.ID" id="profile-id" />
+        <div class="row pt-2 px-2">
+            <div class="col">
+                @if (User.IsInRole("admin"))
+                {
+
+                    <button class="btn btn-primary" id="message-btn">
+                        Сообщения
+                    </button>
+                    <button class="btn btn-primary" id="edit-btn">
+                        Редактировать
+                    </button>
+                    <button class="btn btn-primary" id="delete-btn">
+                        Удалить
+                    </button>
+
+                    <script src="~/Scripts/ProjectScripts/ChangeUser.js"></script>
+                }
+            </div>
+        </div>
+
         <div class="row p-2">
             <div class="col-lg-3 col-md-4">
                 <img src="@UserRequests.MakeImageString(user.Avatar)" alt="Ваша аватарка" class="img-thumbnail">
@@ -98,15 +123,17 @@
                             </div>
                         }
                     </div>
+
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12 mb-2">
                 <h5> Соседи </h5>
-                @if (neighbours.Count() == 0) { 
+                @if (neighbours.Count() == 0)
+                {
                     <div class="text-center text-muted">
-                        К сожалению мы не нашли Ваших соседей.
+                        К сожалению мы не нашли соседей.
                     </div>
                 }
 
@@ -118,25 +145,12 @@
                 }
             </div>
         </div>
-
-        
-        @if (User.IsInRole("admin"))
+        @if (loggedID != user.ID)
         {
             <div class="row">
-                <div class="col mb-3">
-                    <button class="btn btn-primary" id="message-btn">
-                        Сообщения
-                    </button>
-                    <button class="btn btn-primary" id="edit-btn">
-                        Редактировать
-                    </button>
-                    <button class="btn btn-primary" id="delete-btn">
-                        Удалить
-                    </button>
+                <div class="col-12 mb-2">
+                    <a class="btn btn-primary" href=@("../User/Friends?id=" + user.ID)> Друзья </a>
                 </div>
             </div>
-
-            <script src="~/Scripts/ProjectScripts/ChangeUser.js"></script>
-        }
-
+        }    
     </section>

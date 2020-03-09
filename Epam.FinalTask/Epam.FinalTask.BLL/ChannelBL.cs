@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
+using Epam.FinalTask.ApplicationLogger;
 
 namespace Epam.FinalTask.BLL
 {
@@ -14,7 +16,7 @@ namespace Epam.FinalTask.BLL
         private IMessageDao _messageDao;
         private IChannelDao _channelDao;
         private IUserBL _userBL;
-
+        private ILog _logger = Logger.Log;
         public ChannelBL(IChannelDao channelDao, IMessageDao messageDao, IUserBL userBL)
         {
             _messageDao = messageDao;
@@ -23,7 +25,14 @@ namespace Epam.FinalTask.BLL
         }
         public Channel GetById(int channelID)
         {
-            return _channelDao.GetChannelById(channelID);
+            try {
+                return _channelDao.GetChannelById(channelID);
+            }
+            catch (ArgumentException e) {
+                _logger.Error($"Cannot get channel with id = {channelID}", e);
+                throw;
+            }
+            
         }
         public void AttachUserToChannel(int userID, int channelID)
         {

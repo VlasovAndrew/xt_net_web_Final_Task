@@ -16,8 +16,8 @@
     {
         <img class="img-thumbnail" src="@UserRequests.MakeImageString(user.Avatar)" id="user-image" alt="Фото" />
     }
-    else 
-    { 
+    else
+    {
         <img class="img-thumbnail hidden-image" id="user-image" alt="Фото" />
     }
 
@@ -33,7 +33,7 @@
     <div class="form-group col-md-6" id="name-input">
         <label for="inputName">Имя</label>
         <input type="text" class="form-control" name="name"
-               id="inputName" placeholder="Имя" value="@user.Name"/>
+               id="inputName" placeholder="Имя" value="@user.Name" />
         <div class="invalid-feedback">
 
         </div>
@@ -41,7 +41,7 @@
     <div class="form-group col-md-6" id="lastname-input">
         <label for="inputSurname">Фамилия</label>
         <input type="text" class="form-control" name="surname"
-               id="inputSurname" placeholder="Фамилия" value="@user.Surname"/>
+               id="inputSurname" placeholder="Фамилия" value="@user.Surname" />
         <div class="invalid-feedback">
 
         </div>
@@ -58,47 +58,61 @@
     </div>
 </div>
 
-<div class="form-row">
-    <div class="form-group col-12" id="city-row">
-        <label for="inputAddress">Город</label>
-        <input type="text" class="form-control"
-               id="inputCity" placeholder="Город"
-               name="city" value="@user.City" required />
-        <div class="invalid-feedback">
+<div class="js-form-address">
+    <div class="form-row field">
+        <div class="form-group col-12" id="city-row">
+            <label for="inputAddress">Город</label>
+            <input type="text" class="form-control"
+                   id="inputCity" placeholder="Город"
+                   name="city" value="@user.City" required />
+            <div class="invalid-feedback">
 
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row field">
+        <div class="form-group col-12" id="street-row">
+            <label for="inputAddress">Улица</label>
+            <input type="text" class="form-control"
+                   id="inputStreet"
+                   placeholder="Улица"
+                   name="street" value="@user.Street" required />
+            <div class="invalid-feedback">
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row field">
+        <div class="form-group col-md-6" id="house-row">
+            <label for="inputHouseNumber">Дом</label>
+            <input type="text" class="form-control"
+                   id="inputHouse"
+                   placeholder="Дом"
+                   name="house" value="@user.HouseNumber" required />
+            <div class="invalid-feedback">
+                
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputApartmentNumber">Квартира</label>
+            <input type="text" class="form-control"
+                   id="inputApartmentNumber"
+                   placeholder="Квартира"
+                   name="apartment" value="@apartmentNumber" />
         </div>
     </div>
 </div>
-
-<div class="form-row">
-    <div class="form-group col-12" id="street-row">
-        <label for="inputAddress">Улица</label>
-        <input type="text" class="form-control"
-               id="inputStreet"
-               placeholder="Улица"
-               name="street" value="@user.Street" required />
-        <div class="invalid-feedback">
-            Пожалуйста введите Вашу улицу.
-        </div>
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group col-md-6" id="house-row">
-        <label for="inputHouseNumber">Дом</label>
-        <input type="number" class="form-control"
-               id="inputHouse"
-               placeholder="Дом"
-               name="house" value="@user.HouseNumber" required />
-        <div class="invalid-feedback">
-            Пожалуйста введите номер Вашего дома.
-        </div>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputApartmentNumber">Квартира</label>
-        <input type="text" class="form-control"
-               id="inputApartmentNumber"
-               placeholder="Квартира"
-               name="apartment" value="@apartmentNumber"/>
-    </div>
-</div>
+<script src="~/Scripts/FiasScripts/core.js"></script>
+<script src="~/Scripts/FiasScripts/fias.js"></script>
+<script src="~/Scripts/FiasScripts/CheckAddress.js"></script>
+<script>
+    $(document).on("keypress", 'form', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
